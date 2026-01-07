@@ -1,0 +1,13 @@
+export { default as AboutSection } from './AboutSection';
+export { default as ContactSection } from './ContactSection';
+export { default as CTASection } from './CTASection';
+export { default as Footer } from './Footer';
+export { default as HeroSection } from './HeroSection';
+export { default as Navigation } from './Navigation';
+export { default as NavLink } from './NavLink';
+export { default as ProcessSection } from './ProcessSection';
+export { default as ProjectsSection } from './ProjectsSection';
+export { default as SkillsSection } from './SkillsSection';
+export { default as TestimonialsSection } from './TestimonialsSection';
+export { default as TrustStrip } from './TrustStrip';
+export { default as WhyHireSection } from './WhyHireSection';
