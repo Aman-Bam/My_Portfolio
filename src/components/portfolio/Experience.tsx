@@ -6,13 +6,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const events = [
-  { year: '2022', title: 'Started BCA at Kumaun University', desc: 'First MERN project. Immediately went deeper than the curriculum.' },
-  { year: '2023', title: 'Built Employment Management System', desc: 'Dark glassmorphism UI, full MERN stack, admin + task management.' },
-  { year: '2024', title: 'University Bug Audit — kunainital.ac.in', desc: "Contracted to audit KU's official site. Professional report: JS errors, broken API calls, React visual issues." },
-  { year: '2024', title: 'Won 1st Place — KU Hackathon', desc: 'Apuni Sarkar: React + Gemini AI govt services platform. Beat every team. Solo build under pressure.' },
-  { year: '2024', title: 'Co-founded Rebooked', desc: 'SaaS for appointment-based businesses. Lost Revenue Calculator as top-of-funnel. Real venture.' },
-  { year: '2025', title: 'Job Aggregator + AI Cover Letter Tool', desc: 'Python · React · Flask · multi-platform scraper · email notifications.' },
-  { year: '2026', title: 'Graduating — Seeking First Role', desc: 'Open to full-time, part-time, freelance, contract. Remote preferred.' },
+  { year: '2024', title: 'Started BCA at Kumaun University', desc: 'First MERN project. Immediately went deeper than the curriculum.' },
+  { year: '2025', title: 'Won Uttarakhand AI Mission – UDBHAV 2025 Hackathon', desc: 'Apuni Sarkar: React + Gemini AI govt services platform. Beat every team. Solo build under pressure.' },
+  { year: '2025', title: 'Built Employment Management System', desc: 'Dark glassmorphism UI, full MERN stack, admin + task management.' },
+  { year: '2026', title: 'University Bug Audit — kunainital.ac.in', desc: "Contracted to audit KU's official site. Professional report: JS errors, broken API calls, React visual issues." },
+  { year: '2026', title: 'Worked on Rebooked',   desc: 'Worked on building a SaaS for appointment-driven businesses. Solved real-world bugs, improved performance, and developed a high-converting Lost Revenue Calculator. Focused on both product thinking and engineering execution.' },
+  { year: '2027', title: 'Graduating — Seeking First Full-Time Role', desc: 'Open to full-time, part-time, freelance, contract. Remote preferred.' },
 ];
 
 const Experience = () => {
