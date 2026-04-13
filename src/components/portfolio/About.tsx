@@ -41,9 +41,12 @@ const About = () => {
         <div className="lg:w-[55%]">
           <div className="relative pl-6 mb-12">
             <div ref={borderRef} className="absolute left-0 top-0 w-[2px] h-full bg-mint origin-bottom" />
-            <p className="font-editorial text-2xl md:text-[28px] text-foreground leading-snug">
-              I don't just write code.<br />
-              I build systems that solve real problems.
+            <p className="font-editorial text-4xl md:text-5xl text-foreground leading-snug">
+              I don't just write code.
+              I <br />
+              <span className="text-red-600">build systems</span>
+              <br />
+              that solve real problems.
             </p>
           </div>
 

@@ -403,68 +403,6 @@ const Hero = () => {
 
       {/* ── Part 2: GSAP horizontal scroll (page pins here) ── */}
       <HorizontalScrollName />
-
-      {/* ── Part 3: Description, buttons, stats ── */}
-      <section
-        style={{ background: "#080808", padding: "4rem 1.5rem 8rem" }}
-        className="relative w-full flex flex-col items-center justify-center text-center"
-      >
-        <motion.div
-          className="flex flex-row items-center justify-center gap-6 md:gap-12 mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          {/* <motion.a
-            href="#projects"
-            className="group relative px-8 py-4 bg-orange-600 text-white rounded-full font-bold text-sm tracking-widest overflow-hidden transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl shadow-orange-900/20"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              VIEW MY WORK{" "}
-              <span className="transition-transform group-hover:translate-x-1">
-                →
-              </span>
-            </span>
-          </motion.a> */}
-
-          {/* <motion.a
-            href="#contact"
-            className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-full font-bold text-sm tracking-widest transition-all duration-300 hover:bg-white/10 hover:border-white/20 active:scale-95"
-          >
-            HIRE ME
-          </motion.a> */}
-        </motion.div>
-
-        <motion.div
-          className="flex flex-wrap items-center justify-center gap-8 md:gap-16 pt-12 border-t border-white/5"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          viewport={{ once: true }}
-        >
-          {[
-            { label: "MERN", icon: "⚡" },
-            { label: "Next.js", icon: "🚀" },
-            { label: "AI Tools", icon: "🧠" },
-            { label: "SaaS", icon: "☁️" },
-          ].map((item) => (
-            <div key={item.label} className="flex items-center gap-3 group">
-              <span className="text-xl grayscale group-hover:grayscale-0 transition-all">
-                {item.icon}
-              </span>
-              <span className="font-mono text-[10px] md:text-[11px] tracking-[0.3em] font-bold text-slate-500 group-hover:text-orange-400 transition-colors uppercase">
-                {item.label}
-              </span>
-            </div>
-          ))}
-        </motion.div>
-
-        <motion.div
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 w-px h-12 bg-gradient-to-b from-orange-500 to-transparent origin-top"
-          animate={{ scaleY: [1, 0.4, 1], opacity: [0.4, 1, 0.4] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        />
-      </section>
     </>
   );
 };

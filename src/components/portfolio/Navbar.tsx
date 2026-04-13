@@ -13,7 +13,7 @@ const sections = [
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [hoveredDot, setHoveredDot] = useState<string | null>(null);
+
   const { scrollY } = useScroll();
   const bgOpacity = useTransform(scrollY, [0, 80], [0, 0.8]);
   const blur = useTransform(scrollY, [0, 80], [0, 12]);
@@ -50,18 +50,6 @@ const Navbar = () => {
               data-cursor="link"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-text-secondary group-hover:bg-mint transition-colors" />
-              <AnimatePresence>
-                {hoveredDot === s.id && (
-                  <motion.span
-                    initial={{ opacity: 0, x: -4 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -4 }}
-                    className="font-mono text-[10px] uppercase tracking-widest text-mint"
-                  >
-                    {s.label}
-                  </motion.span>
-                )}
-              </AnimatePresence>
             </button>
           ))}
         </div>

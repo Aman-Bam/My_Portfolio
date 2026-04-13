@@ -1,8 +1,14 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ExternalLink } from 'lucide-react';
-import { GitHubLogoIcon } from '@radix-ui/react-icons';
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ExternalLink } from "lucide-react";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
+
+const IK_URL = import.meta.env.VITE_IK_URL_ENDPOINT ?? "";
+
+/** Builds an ImageKit URL with properly encoded path segments */
+const ikUrl = (path: string) =>
+  `${IK_URL}/${path.split("/").map(encodeURIComponent).join("/")}`;
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,71 +22,83 @@ interface Project {
   github?: string;
   live?: string;
   color?: string;
+  image?: string;
 }
 
 const projects: Project[] = [
   {
-    title: 'Apuni Sarkar',
+    title: "Apuni Sarkar",
     description:
-      'AI-powered platform simplifying access to Uttarakhand government schemes, documentation, and citizen services. Built with React 19 + Google Gemini API. No backend — pure frontend + AI.',
-    tech: ['React 19', 'Gemini API', 'Tailwind CSS', 'Framer Motion'],
-    badge: '🥇 HACKATHON WINNER — KU 2024',
-    color: '#00e87a',
+      "AI-powered platform simplifying access to Uttarakhand government schemes, documentation, and citizen services. Built with React 19 + Google Gemini API. No backend — pure frontend + AI.",
+    tech: ["React 19", "Gemini API", "Tailwind CSS", "Framer Motion"],
+    badge: "🥇 HACKATHON WINNER — KU 2024",
+    color: "#00e87a",
+    live: "https://apuni-sarkar.vercel.app/",
+    github: "https://github.com/amankr04/apuni-sarkar",
+    image: "Project_img/Apuni_Sarkar.png",
   },
   {
-    title: 'Employment Mgmt System',
+    title: "Employment Management System",
     description:
-      'Dark glassmorphism UI with emerald accents. Admin + employee dashboards, task management, role-based access, real-time updates.',
-    tech: ['MongoDB', 'Express', 'React', 'Node.js', 'Tailwind CSS'],
-    color: '#FFB347',
+      "Dark glassmorphism UI with emerald accents. Admin + employee dashboards, task management, role-based access, real-time updates.",
+    tech: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS"],
+    color: "#FFB347",
+    image: "Project_img/EmploymentManagementSystem.png",
   },
   {
-    title: 'Banking System Backend',
+    title: "Banking System Backend",
     description:
-      'Pure backend REST API. Account management, transactions, authentication, and balance operations.',
-    tech: ['Node.js', 'Express.js', 'MongoDB'],
-    type: 'Backend API',
-    color: '#7EB8F7',
+      "Pure backend REST API. Account management, transactions, authentication, and balance operations.",
+    tech: ["Node.js", "Express.js", "MongoDB"],
+    type: "Backend API",
+    color: "#7EB8F7",
+    image: "Project_img/bankingsystem.png",
   },
   {
-    title: 'Lead Extension',
+    title: "Lead Extension",
     description:
-      'Browser-based lead capture tool for extracting and managing prospect data directly from any website.',
-    tech: ['Chrome Extension APIs', 'JavaScript'],
-    type: 'Chrome Extension',
-    color: '#B97CF7',
+      "Browser-based lead capture tool for extracting and managing prospect data directly from any website.",
+    tech: ["Chrome Extension APIs", "JavaScript"],
+    type: "Chrome Extension",
+    color: "#B97CF7",
+    image: "Project_img/Lead_Extension.png",
   },
   {
-    title: 'Job Aggregator',
+    title: "React Meal Explorer",
     description:
-      'Multi-platform scraper (LinkedIn, Naukri, etc.), AI cover letter generator, email notifications, analytics dashboard.',
-    tech: ['Python', 'React', 'Flask', 'SQLite', 'Gemini API'],
-    color: '#F77E7E',
+      "Interactive meal discovery app for exploring recipes with search, filtering, and detailed nutritional information.",
+    tech: ["React", "TheMealDB API", "CSS3"],
+    type: "Web Application",
+    color: "#FF6B6B",
+    image: "Project_img/Meal-Explorer.png",
   },
   {
-    title: 'Rebooked',
+    title: "Meal-Explorer",
     description:
-      'SaaS for appointment-based businesses. Revenue leakage audit + Lost Revenue Calculator. Cold outreach automation.',
-    tech: ['MERN Stack', 'TypeScript'],
-    status: 'In Progress',
-    type: 'SaaS · Co-founded',
-    color: '#00e87a',
+      "SaaS for appointment-based businesses. Revenue leakage audit + Lost Revenue Calculator. Cold outreach automation.",
+    tech: ["MERN Stack", "TypeScript"],
+    status: "In Progress",
+    type: "SaaS · Co-founded",
+    color: "#00e87a",
+    image: "Project_img/Meal-Explorer.png",
   },
 ];
 
 const ProjectCard = ({ project }: { project: Project }) => {
-  const accent = project.color ?? '#00e87a';
+  const accent = project.color ?? "#00e87a";
 
   return (
     <div className="project-card-wrap">
       <div
         className="project-card"
-        style={{ '--accent': accent } as React.CSSProperties}
+        style={{ "--accent": accent } as React.CSSProperties}
       >
         {/* Gradient blob */}
         <div
           className="card-blob"
-          style={{ background: `radial-gradient(circle at 30% 30%, ${accent}22 0%, transparent 70%)` }}
+          style={{
+            background: `radial-gradient(circle at 30% 30%, ${accent}22 0%, transparent 70%)`,
+          }}
         />
 
         {/* Top bar */}
@@ -96,21 +114,44 @@ const ProjectCard = ({ project }: { project: Project }) => {
           )}
           <div className="card-links">
             {project.github && (
-              <a href={project.github} target="_blank" rel="noreferrer" aria-label="GitHub">
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+              >
                 <GitHubLogoIcon width={16} height={16} />
               </a>
             )}
             {project.live && (
-              <a href={project.live} target="_blank" rel="noreferrer" aria-label="Live Demo">
+              <a
+                href={project.live}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Live Demo"
+              >
                 <ExternalLink size={16} />
               </a>
             )}
           </div>
         </div>
 
+        {/* Project Image Container */}
+        <div className="card-image-container">
+          {project.image && (
+            <img
+              src={ikUrl(project.image)}
+              loading="lazy"
+              alt={project.title}
+              className="card-image"
+            />
+          )}
+          <div className="image-overlay" />
+        </div>
+
         {/* Number */}
         <span className="card-number" style={{ color: `${accent}18` }}>
-          {String(projects.indexOf(project) + 1).padStart(2, '0')}
+          {String(projects.indexOf(project) + 1).padStart(2, "0")}
         </span>
 
         {/* Content */}
@@ -119,7 +160,11 @@ const ProjectCard = ({ project }: { project: Project }) => {
           <p className="card-desc">{project.description}</p>
           <div className="card-tech">
             {project.tech.map((t) => (
-              <span key={t} className="tech-tag" style={{ borderColor: `${accent}30`, color: accent }}>
+              <span
+                key={t}
+                className="tech-tag"
+                style={{ borderColor: `${accent}30`, color: accent }}
+              >
                 {t}
               </span>
             ))}
@@ -150,12 +195,12 @@ const Projects = () => {
 
       const tween = gsap.to(strip, {
         x: () => -getScrollLength(),
-        ease: 'none',
+        ease: "none",
         scrollTrigger: {
           trigger: wrapper,
           pin: true,
           scrub: 1,
-          start: 'center center',
+          start: "center center",
           end: () => `+=${strip.scrollWidth}`,
           invalidateOnRefresh: true,
         },
@@ -241,6 +286,34 @@ const Projects = () => {
           inset: 0;
           pointer-events: none;
           z-index: 0;
+        }
+        .card-image-container {
+          position: relative;
+          width: calc(100% + 4rem);
+          height: 180px;
+          margin: 1.5rem -2rem 0;
+          overflow: hidden;
+          background: #151515;
+          border-top: 1px solid rgba(255,255,255,0.05);
+          border-bottom: 1px solid rgba(255,255,255,0.05);
+          z-index: 1;
+        }
+        .card-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          filter: saturate(0.8) contrast(1.1);
+        }
+        .project-card:hover .card-image {
+          transform: scale(1.08);
+          filter: saturate(1.1);
+        }
+        .image-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to bottom, transparent 0%, rgba(14,14,14,0.4) 100%);
+          pointer-events: none;
         }
         .card-topbar {
           position: relative;
@@ -380,7 +453,8 @@ const Projects = () => {
       <div className="projects-header">
         <p className="projects-label">003 — SELECTED WORK</p>
         <h2 className="projects-title">
-          THINGS I'VE<br />
+          THINGS I'VE
+          <br />
           <span className="highlight">SHIPPED</span>.
         </h2>
       </div>
