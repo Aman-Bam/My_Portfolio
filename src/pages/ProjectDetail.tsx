@@ -6,6 +6,12 @@ import { Magnetic } from "../components/portfolio/Magnetic";
 import { ChevronLeft, ExternalLink } from "lucide-react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
+const IK_URL = import.meta.env.VITE_IK_URL_ENDPOINT ?? "";
+
+/** Builds an ImageKit URL with properly encoded path segments */
+const ikUrl = (path: string) =>
+  `${IK_URL}/${path.split("/").map(encodeURIComponent).join("/")}`;
+
 const ProjectDetail = () => {
   const { projectId } = useParams();
   const navigate = useNavigate();
@@ -132,7 +138,7 @@ const ProjectDetail = () => {
           <div className="relative aspect-square rounded-3xl overflow-hidden border border-white/10 group">
             {project.image && (
               <img
-                src={`/${project.image}`}
+                src={ikUrl(project.image)}
                 alt={project.title}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
