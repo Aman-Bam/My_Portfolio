@@ -34,12 +34,10 @@ const CustomCursor = () => {
 
       const state = hoverState.current;
       if (outerRef.current) {
-        const size = state === 'link' ? 48 : 32;
-        const opacity = state === 'link' ? 0.08 : 0;
-        outerRef.current.style.transform = `translate(${outerPos.current.x}px, ${outerPos.current.y}px) translate(-50%, -50%)`;
-        outerRef.current.style.width = `${size}px`;
-        outerRef.current.style.height = `${size}px`;
-        outerRef.current.style.backgroundColor = state === 'link' ? 'rgba(0,232,122,0.08)' : 'transparent';
+        const isLink = state === 'link';
+        outerRef.current.style.transform = `translate(${outerPos.current.x}px, ${outerPos.current.y}px) translate(-50%, -50%) scale(${isLink ? 1.5 : 1})`;
+        outerRef.current.style.backgroundColor = isLink ? 'rgba(0,232,122,0.08)' : 'transparent';
+        outerRef.current.style.borderColor = isLink ? 'rgba(0,255,150,0.4)' : 'rgba(0,255,150,0.1)';
       }
 
       frameRef.current = requestAnimationFrame(animate);

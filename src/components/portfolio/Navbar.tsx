@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
+import { Magnetic } from './Magnetic';
 
 const sections = [
   { id: 'hero', label: 'HOME' },
@@ -13,6 +14,7 @@ const sections = [
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hoveredDot, setHoveredDot] = useState<string | null>(null);
 
   const { scrollY } = useScroll();
   const bgOpacity = useTransform(scrollY, [0, 80], [0, 0.8]);
@@ -35,9 +37,11 @@ const Navbar = () => {
           borderBottom: useTransform(borderOpacity, (v) => `1px solid rgba(255,255,255,${v})`),
         }}
       >
-        <button onClick={() => scrollTo('hero')} className="font-display font-extrabold text-lg text-mint tracking-tight" data-cursor="link">
-          AB
-        </button>
+        <Magnetic>
+          <button onClick={() => scrollTo('hero')} className="font-display font-extrabold text-lg text-mint tracking-tight" data-cursor="link">
+            AB
+          </button>
+        </Magnetic>
 
         <div className="hidden md:flex items-center gap-6">
           {sections.map((s) => (
@@ -63,15 +67,17 @@ const Navbar = () => {
             />
             AVAILABLE
           </span>
-          <motion.button
-            onClick={() => scrollTo('contact')}
-            className="font-mono text-[11px] tracking-wider border border-mint/60 text-mint px-4 py-2 hover:bg-mint hover:text-primary-foreground transition-colors"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            data-cursor="link"
-          >
-            HIRE ME
-          </motion.button>
+          <Magnetic>
+            <motion.button
+              onClick={() => scrollTo('contact')}
+              className="font-mono text-[11px] tracking-wider border border-mint/60 text-mint px-4 py-2 hover:bg-mint hover:text-primary-foreground transition-colors"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              data-cursor="link"
+            >
+              HIRE ME
+            </motion.button>
+          </Magnetic>
         </div>
 
         <button

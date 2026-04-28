@@ -3,6 +3,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ExternalLink } from "lucide-react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { Magnetic } from "./Magnetic";
+import { projects, type Project } from "../../data/projects";
 
 const IK_URL = import.meta.env.VITE_IK_URL_ENDPOINT ?? "";
 
@@ -12,83 +14,11 @@ const ikUrl = (path: string) =>
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface Project {
-  title: string;
-  description: string;
-  tech: string[];
-  type?: string;
-  badge?: string;
-  status?: string;
-  github?: string;
-  live?: string;
-  color?: string;
-  image?: string;
-}
-
-const projects: Project[] = [
-  {
-    title: "Apuni Sarkar",
-    description:
-      "AI-powered platform simplifying access to Uttarakhand government schemes, documentation, and citizen services. Built with React 19 + Google Gemini API. No backend — pure frontend + AI.",
-    tech: ["React 19", "Gemini API", "Tailwind CSS", "Framer Motion"],
-    badge: "🥇 HACKATHON WINNER — KU 2024",
-    color: "#00e87a",
-    live: "https://apuni-sarkar.vercel.app/",
-    github: "https://github.com/amankr04/apuni-sarkar",
-    image: "Project_img/Apuni_Sarkar.png",
-  },
-  {
-    title: "Employment Management System",
-    description:
-      "Dark glassmorphism UI with emerald accents. Admin + employee dashboards, task management, role-based access, real-time updates.",
-    tech: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS"],
-    color: "#FFB347",
-    image: "Project_img/EmploymentManagementSystem.png",
-  },
-  {
-    title: "Banking System Backend",
-    description:
-      "Pure backend REST API. Account management, transactions, authentication, and balance operations.",
-    tech: ["Node.js", "Express.js", "MongoDB"],
-    type: "Backend API",
-    color: "#7EB8F7",
-    image: "Project_img/bankingsystem.png",
-  },
-  {
-    title: "Lead Extension",
-    description:
-      "Browser-based lead capture tool for extracting and managing prospect data directly from any website.",
-    tech: ["Chrome Extension APIs", "JavaScript"],
-    type: "Chrome Extension",
-    color: "#B97CF7",
-    image: "Project_img/Lead_Extension.png",
-  },
-  {
-    title: "React Meal Explorer",
-    description:
-      "Interactive meal discovery app for exploring recipes with search, filtering, and detailed nutritional information.",
-    tech: ["React", "TheMealDB API", "CSS3"],
-    type: "Web Application",
-    color: "#FF6B6B",
-    image: "Project_img/Meal-Explorer.png",
-  },
-  {
-    title: "Meal-Explorer",
-    description:
-      "SaaS for appointment-based businesses. Revenue leakage audit + Lost Revenue Calculator. Cold outreach automation.",
-    tech: ["MERN Stack", "TypeScript"],
-    status: "In Progress",
-    type: "SaaS · Co-founded",
-    color: "#00e87a",
-    image: "Project_img/Meal-Explorer.png",
-  },
-];
-
 const ProjectCard = ({ project }: { project: Project }) => {
   const accent = project.color ?? "#00e87a";
 
   return (
-    <div className="project-card-wrap">
+    <Magnetic className="project-card-wrap">
       <div
         className="project-card"
         style={{ "--accent": accent } as React.CSSProperties}
@@ -174,7 +104,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
         {/* Bottom accent bar */}
         <div className="card-accent-bar" style={{ background: accent }} />
       </div>
-    </div>
+    </Magnetic>
   );
 };
 

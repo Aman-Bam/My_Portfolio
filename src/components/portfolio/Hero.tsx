@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const WireframeMesh = () => {
+const WireframeMesh = ({ progress = 0 }: { progress?: number }) => {
   const groupRef = useRef<THREE.Group>(null);
   const mouse = useRef({ x: 0, y: 0 });
   const target = useRef({ x: 0, y: 0 });
@@ -30,6 +30,11 @@ const WireframeMesh = () => {
     target.current.y += (mouse.current.x * 0.26 - target.current.y) * 0.05;
     groupRef.current.rotation.x +=
       (target.current.x - groupRef.current.rotation.x) * 0.05;
+
+    // Scale and position based on scroll progress
+    const scale = 1 + progress * 15; // Scale up to 16x
+    groupRef.current.scale.set(scale, scale, scale);
+    groupRef.current.position.z = -progress * 10; // Move camera "into" the mesh
   });
 
   return (
@@ -39,7 +44,9 @@ const WireframeMesh = () => {
           wireframe
           color="#FF6B2B"
           transparent
-          opacity={0.15}
+          opacity={0.15 + progress * 0.3}
+          emissive="#FF6B2B"
+          emissiveIntensity={progress * 2}
         />
       </mesh>
       <mesh geometry={geo} scale={1.3} rotation-y={Math.PI / 4}>
@@ -47,7 +54,7 @@ const WireframeMesh = () => {
           wireframe
           color="#FF6B2B"
           transparent
-          opacity={0.06}
+          opacity={0.06 + progress * 0.1}
         />
       </mesh>
       <pointLight position={[5, 5, 5]} intensity={1} />
@@ -170,7 +177,6 @@ const HorizontalScrollName = () => {
     const mm = gsap.matchMedia();
 
     mm.add("(min-width: 768px)", () => {
-      // Pin the wrapper and scroll text horizontally
       const scrollTween = gsap.to(textEl, {
         xPercent: -100,
         ease: "none",
@@ -178,70 +184,57 @@ const HorizontalScrollName = () => {
           trigger: wrapper,
           pin: true,
           start: "top top",
-          end: "+=300%", // Percentage-based for responsiveness
-          scrub: 1, // Smoother scrub value
+          end: "+=300%",
+          scrub: 1,
           anticipatePin: 1,
         },
       });
 
       scrollTriggerRef.current.push(scrollTween.scrollTrigger!);
 
-      // Animate characters with stagger effect
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: textEl,
+          containerAnimation: scrollTween,
+          start: "left 100%",
+          end: "right 0%",
+          scrub: 1,
+        },
+      });
+
       charRefs.current.forEach((char, index) => {
         if (!char) return;
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: char,
-            containerAnimation: scrollTween,
-            start: "left 100%",
-            end: "left 40%",
-            scrub: 1,
-          },
-        });
-
         tl.from(char, {
           yPercent: gsap.utils.random(-150, 150),
           rotation: gsap.utils.random(-30, 30),
           scale: 0.5,
           opacity: 0,
           ease: "back.out(2)",
-        }).to(
-          char,
-          {
-            scale: 1,
-            opacity: 1,
-          },
-          "<",
-        );
-
-        scrollTriggerRef.current.push(tl.scrollTrigger!);
+          duration: 0.5,
+        }, index * 0.1);
       });
     });
 
-    // Mobile — per-character GSAP ScrollTrigger (mirrors desktop quality)
     mm.add("(max-width: 767px)", () => {
-      charRefs.current.forEach((char) => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: textEl,
+          start: "top 90%",
+          end: "bottom 10%",
+          scrub: 1,
+        },
+      });
+
+      charRefs.current.forEach((char, index) => {
         if (!char) return;
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: char,
-            start: "top 90%",
-            end: "top 40%",
-            scrub: 1,
-          },
-        });
-
         tl.from(char, {
           yPercent: gsap.utils.random(-120, 120),
           rotation: gsap.utils.random(-25, 25),
           scale: 0.4,
           opacity: 0,
           ease: "back.out(2)",
-        }).to(char, { scale: 1, opacity: 1 }, "<");
-
-        scrollTriggerRef.current.push(tl.scrollTrigger!);
+          duration: 0.5,
+        }, index * 0.1);
       });
     });
 
@@ -352,6 +345,7 @@ const MobileHero = () => {
 
 const Hero = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const scrollProgress = useRef(0);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -359,6 +353,19 @@ const Hero = () => {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
+
+    const updateProgress = () => {
+      const scrollY = window.scrollY;
+      const maxScroll = window.innerHeight * 0.6; // Trigger over 60% of viewport height
+      scrollProgress.current = Math.min(scrollY / maxScroll, 1);
+    };
+
+    window.addEventListener("scroll", updateProgress);
+    return () => window.removeEventListener("scroll", updateProgress);
+  }, [isMobile]);
 
   // ── Mobile: classic simple layout ──
   if (isMobile) return <MobileHero />;
@@ -385,7 +392,7 @@ const Hero = () => {
             }}
           >
             <Suspense fallback={null}>
-              <WireframeMesh />
+              <WireframeMesh progress={scrollProgress.current} />
             </Suspense>
           </Canvas>
         </div>
@@ -400,9 +407,6 @@ const Hero = () => {
           </motion.div>
         </div>
       </section>
-
-      {/* ── Part 2: GSAP horizontal scroll (page pins here) ── */}
-      <HorizontalScrollName />
     </>
   );
 };

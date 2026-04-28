@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { GitHubLogoIcon as Github, LinkedInLogoIcon as Linkedin, InstagramLogoIcon as Instagram } from '@radix-ui/react-icons';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Magnetic } from './Magnetic';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,10 +29,16 @@ const Footer = () => {
           Designed & built by <span className="hover:text-mint transition-colors">Aman BAM</span>
         </p>
         <div className="flex items-center gap-4">
-          {[Github, Linkedin, Instagram].map((Icon, i) => (
-            <a key={i} href="#" className="text-text-secondary hover:text-mint transition-colors" aria-label={Icon.displayName || 'social'} data-cursor="link">
-              <Icon size={16} />
-            </a>
+          {[
+            { Icon: Github, url: 'https://github.com/Aman-Bam', label: 'GitHub' },
+            { Icon: Linkedin, url: 'https://www.linkedin.com/in/aman-bam/', label: 'LinkedIn' },
+            { Icon: Instagram, url: 'https://www.instagram.com/amanbam__', label: 'Instagram' }
+          ].map(({ Icon, url, label }, i) => (
+            <Magnetic key={i}>
+              <a href={url} target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-mint transition-colors" aria-label={label} data-cursor="link">
+                <Icon width={20} height={20} />
+              </a>
+            </Magnetic>
           ))}
         </div>
         <p className="font-mono text-xs text-text-secondary">
