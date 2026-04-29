@@ -24,6 +24,8 @@ dist-ssr
 *.sw?
 .vercel
 .env*.local
+.gitignore
+
 
 .claude
 .vercel
