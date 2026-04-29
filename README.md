@@ -102,11 +102,9 @@ src/
 
 ## 📬 Connect With Me
 
-- **GitHub:** [@your-github](https://github.com/your-github)
-- **LinkedIn:** [@your-linkedin](https://linkedin.com/in/your-linkedin)
-- **Twitter/X:** [@your-twitter](https://twitter.com/your-twitter)
-- **Email:** your-email@example.com
-
+- **GitHub:** [@Aman-Bam](https://github.com/Aman-Bam)
+- **LinkedIn:** [@Aman-Bam](https://www.linkedin.com/in/aman-bam/)
+- **Email:** amanbam604@gmail.com
 ---
 
 Developed with ⚡ and 🛠 by **Aman Bam**.
