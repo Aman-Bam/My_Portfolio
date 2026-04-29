@@ -33,3 +33,7 @@ node_modules
 .trae
 .claudeignore
 .gitignore
+
+.vercel
+dist
+node_modules
