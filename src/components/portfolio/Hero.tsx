@@ -119,7 +119,7 @@ const HeroMainContent = () => {
         >
           <span className="block mb-2">I Build Full Stack &</span>
           <span className="block bg-clip-text  text-red-600 pb-2">
-            AI Systems
+            AI Systems  vercel chal gaya
           </span>
           <span className="block mt-2">That Drive Real Results</span>
         </h1>
