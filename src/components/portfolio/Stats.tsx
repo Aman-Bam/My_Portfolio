@@ -7,7 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
   { value: 1, display: '01', label: 'HACKATHONS WON' },
-  { value: null, display: '1st', label: 'RANK ACHIEVED' },
+  { value: null, display: '3rd', label: 'RANK ACHIEVED' },
   { value: 3, display: '3+', label: 'REAL PRODUCTS SHIPPED' },
   { value: null, display: '∞', label: 'CURIOSITY' },
 ];
