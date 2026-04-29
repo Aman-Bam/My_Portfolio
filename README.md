@@ -8,7 +8,7 @@
 
 A high-performance, visually immersive portfolio designed to showcase an obsession with systems thinking, engineering execution, and cutting-edge UI/UX.
 
-**Live Demo:** [https://myportfolio-ten-brown-23.vercel.app/] 🌐
+[Click Here For Preview](https://myportfolio-ten-brown-23.vercel.app/)🌐
 
 ---
 
