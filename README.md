@@ -107,4 +107,4 @@ src/
 - **Email:** amanbam604@gmail.com
 ---
 
-Developed with ⚡ and 🛠 by **Aman Bam**.
+Developed with ❤️ by **Aman Bam**.
