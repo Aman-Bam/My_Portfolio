@@ -34,8 +34,8 @@ export const projects: Project[] = [
     tech: ["React 19", "Gemini API", "Tailwind CSS", "Framer Motion"],
     badge: "🥇 HACKATHON WINNER — KU 2024",
     color: "#00e87a",
-    live: "https://apuni-sarkar.vercel.app/",
-    github: "https://github.com/amankr04/apuni-sarkar",
+    live: "https://apuni-sarkar-citizen-services-done.vercel.app/",
+    github: "https://github.com/Aman-Bam/Apuni_Sarkar",
     image: "Project_img/Apuni_Sarkar.png",
     layoutSize: 'hero',
     caseStudy: {
@@ -60,6 +60,7 @@ export const projects: Project[] = [
       gallery: ["Project_img/Apuni_Sarkar_Detail1.png", "Project_img/Apuni_Sarkar_Detail2.png"]
     }
   },
+
   {
     id: "employment-system",
     title: "Employment Management System",
