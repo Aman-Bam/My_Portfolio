@@ -67,6 +67,7 @@ export const projects: Project[] = [
     description: "Dark glassmorphism UI with emerald accents. Admin + employee dashboards, task management, and role-based access.",
     tech: ["MongoDB", "Express", "React", "Node.js", "Tailwind CSS"],
     color: "#FFB347",
+    github: "https://github.com/Aman-Bam/Employee-Management-System",
     image: "Project_img/EmploymentManagementSystem.png",
     layoutSize: 'wide',
     caseStudy: {
@@ -97,6 +98,7 @@ export const projects: Project[] = [
     tech: ["Node.js", "Express.js", "MongoDB"],
     type: "Backend API",
     color: "#7EB8F7",
+    github: "https://github.com/Aman-Bam/Banking-System",
     image: "Project_img/bankingsystem.png",
     layoutSize: 'standard',
     caseStudy: {
@@ -127,6 +129,7 @@ export const projects: Project[] = [
     tech: ["Chrome Extension APIs", "JavaScript"],
     type: "Chrome Extension",
     color: "#B97CF7",
+    github: "https://github.com/Aman-Bam/lead-Extension",
     image: "Project_img/Lead_Extension.png",
     layoutSize: 'standard',
     caseStudy: {
@@ -157,6 +160,8 @@ export const projects: Project[] = [
     tech: ["React", "TheMealDB API", "CSS3"],
     type: "Web Application",
     color: "#FF6B6B",
+    github: "https://github.com/Aman-Bam/React-Meal-Explorer",
+    live:"https://extraordinary-moxie-2517bf.netlify.app/",
     image: "Project_img/Meal-Explorer.png",
     layoutSize: 'standard',
     caseStudy: {
@@ -180,35 +185,4 @@ export const projects: Project[] = [
       gallery: []
     }
   },
-  {
-    id: "saas-founder",
-    title: "Meal-Explorer (SaaS)",
-    description: "SaaS for appointment-based businesses. Revenue leakage audit + Lost Revenue Calculator. Cold outreach automation.",
-    tech: ["MERN Stack", "TypeScript"],
-    status: "In Progress",
-    type: "SaaS · Co-founded",
-    color: "#00e87a",
-    image: "Project_img/Meal-Explorer.png",
-    layoutSize: 'hero',
-    caseStudy: {
-      challenge: "B2B SaaS requires an extremely high level of trust. The 'Lost Revenue Calculator' needed to feel honest and data-driven, not like a sales gimmick.",
-      solution: "Engineered a transparent calculation engine that allows users to input their actual metrics and see a real-time, mathematical breakdown of where their revenue is leaking.",
-      technicalBreakdown: [
-        {
-          feature: "Revenue Leakage Algorithm",
-          insight: "Created a proprietary formula based on industry benchmarks to calculate 'leakage' based on no-show rates and booking gaps.",
-        },
-        {
-          feature: "Automated Outreach Pipeline",
-          insight: "Built a queue-based system for cold outreach that respects API rate limits and schedules messages based on the prospect's timezone for maximum open rates.",
-        }
-      ],
-      outcomes: [
-        "Currently in beta with X number of early adopters.",
-        "Proven ability to identify up to 20% revenue leakage in appointment-based businesses.",
-        "Full-stack TypeScript implementation for zero-runtime errors."
-      ],
-      gallery: []
-    }
-  }
 ];

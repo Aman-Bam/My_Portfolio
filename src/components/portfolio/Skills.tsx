@@ -29,7 +29,7 @@ const Skills = () => (
   <section id="skills" className="py-32 px-6 md:px-12 max-w-7xl mx-auto">
     <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-mint mb-6">004 — TOOLS OF TRADE</p>
     <h2 className="font-display font-extrabold tracking-tight leading-[0.95] mb-20" style={{ fontSize: 'clamp(48px, 8vw, 80px)' }}>
-      WHAT I<br />WORK WITH<span className="text-amber">.</span>
+      WHAT I<br /><span className="text-red-600">WORK</span> WITH.
     </h2>
 
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">

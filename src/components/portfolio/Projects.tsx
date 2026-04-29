@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, ArrowRight } from "lucide-react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Magnetic } from "./Magnetic";
 import { projects, type Project } from "../../data/projects";
@@ -109,6 +110,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
 };
 
 const Projects = () => {
+  const navigate = useNavigate();
   const sectionRef = useRef<HTMLElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
@@ -377,6 +379,36 @@ const Projects = () => {
           height: 1px;
           background: rgba(255,255,255,0.15);
         }
+        .view-all-btn {
+          background: rgba(0, 232, 122, 0.1);
+          border: 1px solid rgba(0, 232, 122, 0.3);
+          color: #00e87a;
+          font-family: 'Space Mono', monospace;
+          font-size: 12px;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          padding: 1.5rem 3rem;
+          border-radius: 1rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(10px);
+          white-space: nowrap;
+        }
+        .view-all-btn:hover {
+          background: #00e87a;
+          color: black;
+          transform: scale(1.05);
+          box-shadow: 0 0 30px rgba(0, 232, 122, 0.4);
+        }
+        .view-all-btn svg {
+          transition: transform 0.3s ease;
+        }
+        .view-all-btn:hover svg {
+          transform: translateX(5px);
+        }
       `}</style>
 
       {/* Static header ABOVE the pinned zone */}
@@ -400,6 +432,14 @@ const Projects = () => {
             {projects.map((p) => (
               <ProjectCard key={p.title} project={p} />
             ))}
+            <Magnetic className="project-card-wrap">
+              <button
+                className="view-all-btn"
+                onClick={() => navigate("/all-project")}
+              >
+                VIEW ALL WORKS <ArrowRight size={16} />
+              </button>
+            </Magnetic>
           </div>
         </div>
       </section>

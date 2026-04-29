@@ -6,6 +6,7 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { ImageKitProvider } from "@imagekit/react";
 import Index from "./pages/Index.tsx";
 import ProjectDetail from "./pages/ProjectDetail.tsx";
+import AllProject from "./pages/AllProject.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { CommandPalette } from "./components/portfolio/CommandPalette.tsx";
 import { CinematicGrain } from "./components/portfolio/CinematicGrain.tsx";
@@ -30,6 +31,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/project/:projectId" element={<ProjectDetail />} />
+            <Route path="/all-project" element={<AllProject />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
