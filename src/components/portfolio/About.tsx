@@ -55,7 +55,7 @@ const About = () => {
 
             "I ship full-stack products: SaaS platforms, AI automation tools, Chrome extensions, and web scrapers. Currently doing QA testing and building cold outreach infrastructure at Rebooked while hunting for remote dev roles. Real projects, real users, real impact — not class assignments.",
 
-            "I debug production systems at 2 AM because I care how things work under the hood as much as how they look on screen. Obsessed with systems thinking, developer tooling, and building UX that doesn't suck. Daily driver: Arch Linux. Because of course.    vercel does you updates for free you can use it"
+            "I debug production systems at 2 AM because I care how things work under the hood as much as how they look on screen. Obsessed with systems thinking, developer tooling, and building UX that doesn't suck. Daily driver: Arch Linux. Because of course."
           ].map((text, i) => (
             <motion.p
               key={i}
