@@ -23,13 +23,21 @@ const WireframeMesh = ({ progress = 0 }: { progress?: number }) => {
 
   const geo = useMemo(() => new THREE.IcosahedronGeometry(2, 1), []);
 
-  useFrame((_, delta) => {
+  useFrame(({ camera }, delta) => {
     if (!groupRef.current) return;
     groupRef.current.rotation.y += 0.001;
     target.current.x += (mouse.current.y * 0.26 - target.current.x) * 0.05;
     target.current.y += (mouse.current.x * 0.26 - target.current.y) * 0.05;
     groupRef.current.rotation.x +=
       (target.current.x - groupRef.current.rotation.x) * 0.05;
+
+    // Cinematic Camera Fly-Through
+    const targetZ = 5 - progress * 15; // Moves from 5 to -10
+    camera.position.z += (targetZ - camera.position.z) * 0.1;
+
+    // Dynamic FOV Shift to increase speed sensation
+    camera.fov = 50 + progress * 20;
+    camera.updateProjectionMatrix();
 
     // Scale and position based on scroll progress
     const scale = 1 + progress * 15; // Scale up to 16x
