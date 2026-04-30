@@ -106,7 +106,7 @@ const SkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; 
         flex flex-col justify-between
         hover:border-mint transition-all duration-300
         cursor-default group/tile
-        ${isExpert ? 'border-mint/40 shadow-[0_0_20px_rgba(0,232,122,0.08)] hover:shadow-[0_0_30px_rgba(0,232,122,0.2)]' : 'hover:border-mint/60 hover:-translate-y-1'}
+        ${isExpert ? 'border-mint/40 shadow-[0_0_20px_rgba(0,232,122,0.08)] hover:shadow-[0_0_40px_rgba(0,232,122,0.3)]' : 'hover:border-mint/60 hover:-translate-y-1'}
       `}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
