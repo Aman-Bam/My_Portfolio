@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 const events = [
   { year: '2024', title: 'Started BCA at Kumaun University', desc: 'First MERN project. Immediately went deeper than the curriculum.' },
   { year: '2025', title: 'Won Uttarakhand AI Mission – UDBHAV 2025 Hackathon', desc: 'Apuni Sarkar: React + Gemini AI govt services platform. Beat every team. Solo build under pressure.' },
-  { year: '2025', title: 'Built Employment Management System', desc: 'Dark glassmorphism UI, full MERN stack, admin + task management.' },
+  { year: '2025', title: 'Built RBAC Management System', desc: 'Dark glassmorphism UI, full MERN stack, admin + task management.' },
   { year: '2026', title: 'University Bug Audit — kunainital.ac.in', desc: "Contracted to audit KU's official site. Professional report: JS errors, broken API calls, React visual issues." },
   { year: '2026', title: 'Worked on Rebooked',   desc: 'Worked on building a SaaS for appointment-driven businesses. Solved real-world bugs, improved performance, and developed a high-converting Lost Revenue Calculator. Focused on both product thinking and engineering execution.' },
   { year: '2027', title: 'Graduating — Seeking First Full-Time Role', desc: 'Open to full-time, part-time, freelance, contract. Remote preferred.' },

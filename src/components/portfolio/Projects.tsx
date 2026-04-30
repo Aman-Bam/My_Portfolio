@@ -6,6 +6,7 @@ import { ExternalLink, ArrowRight } from "lucide-react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Magnetic } from "./Magnetic";
 import { projects, type Project } from "../../data/projects";
+import "./Projects.css";
 
 const IK_URL = import.meta.env.VITE_IK_URL_ENDPOINT ?? "";
 
