@@ -9,7 +9,6 @@ import ProjectDetail from "./pages/ProjectDetail.tsx";
 import AllProject from "./pages/AllProject.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { CommandPalette } from "./components/portfolio/CommandPalette.tsx";
-import { CinematicGrain } from "./components/portfolio/CinematicGrain.tsx";
 
 const queryClient = new QueryClient();
 
