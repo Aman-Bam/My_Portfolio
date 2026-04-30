@@ -84,21 +84,11 @@ const groups: SkillGroup[] = [
   },
 ];
 
-const SkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; delay: number }) => {
-  const isExpert = skill.proficiency === 'Expert';
-  const isAdvanced = skill.proficiency === 'Advanced';
-
-  // Determine grid span based on proficiency
-  const gridSpan = isExpert
-    ? 'md:col-span-2 md:row-span-2'
-    : isAdvanced
-    ? 'md:col-span-2'
-    : 'md:col-span-1';
-
+const CoreSkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; delay: number }) => {
   return (
     <motion.div
       className={`
-        ${gridSpan}
+        md:col-span-2 md:row-span-2
         bg-surface/80 backdrop-blur-md
         border border-border
         rounded-sm
@@ -106,7 +96,7 @@ const SkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; 
         flex flex-col justify-between
         hover:border-mint transition-all duration-300
         cursor-default group/tile
-        ${isExpert ? 'border-mint/40 shadow-[0_0_20px_rgba(0,232,122,0.08)] hover:shadow-[0_0_40px_rgba(0,232,122,0.3)]' : 'hover:border-mint/60 hover:-translate-y-1'}
+        border-mint/40 shadow-[0_0_20px_rgba(0,232,122,0.08)] hover:shadow-[0_0_40px_rgba(0,232,122,0.3)]
       `}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -121,7 +111,7 @@ const SkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; 
       </div>
 
       <div className="mt-auto flex items-end justify-between gap-2">
-        <span className={`font-mono text-[9px] uppercase tracking-widest ${isExpert ? 'text-mint font-bold' : 'text-text-secondary/60'}`}>
+        <span className="font-mono text-[9px] uppercase tracking-widest text-mint font-bold">
           {skill.proficiency}
         </span>
 
@@ -139,8 +129,8 @@ const SkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; 
 
       {skill.statement && (
         <motion.div
-          className={`text-text-secondary text-[11px] leading-relaxed mt-3 ${isExpert ? 'font-mono' : ''}
-            opacity-0 translate-y-2 group-hover/tile:opacity-100 group-hover/tile:translate-y-0 transition-all duration-300 ease-out`}
+          className="text-text-secondary text-[11px] leading-relaxed mt-3 font-mono
+            opacity-0 translate-y-2 group-hover/tile:opacity-100 group-hover/tile:translate-y-0 transition-all duration-300 ease-out"
         >
           {skill.statement}
         </motion.div>
@@ -148,7 +138,94 @@ const SkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; 
     </motion.div>
   );
 });
-SkillTile.displayName = 'SkillTile';
+CoreSkillTile.displayName = 'CoreSkillTile';
+
+const StandardSkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; delay: number }) => {
+  return (
+    <motion.div
+      className={`
+        md:col-span-2
+        bg-surface/80 backdrop-blur-md
+        border border-border
+        rounded-sm
+        p-4
+        flex flex-col justify-between
+        hover:border-mint/40 transition-all duration-300
+        cursor-default group/tile
+        hover:-translate-y-0.5
+      `}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.4 }}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <span className={`w-1.5 h-1.5 rounded-full ${color} shrink-0`} />
+        <span className="font-display text-sm font-bold text-foreground tracking-tight">
+          {skill.name}
+        </span>
+      </div>
+
+      <div className="mt-auto flex items-end justify-between gap-2">
+        <span className="font-mono text-[9px] uppercase tracking-widest text-text-secondary/60">
+          {skill.proficiency}
+        </span>
+
+        {skill.projectLink && (
+          <a
+            href={skill.projectLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-mint/10 border border-mint/20 text-mint text-[9px] px-1.5 py-0.5 rounded-sm font-mono hover:bg-mint/20 transition-colors"
+          >
+            [ VIEW_SAMP → ]
+          </a>
+        )}
+      </div>
+    </motion.div>
+  );
+});
+StandardSkillTile.displayName = 'StandardSkillTile';
+
+const MicroSkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; delay: number }) => {
+  const isLearning = skill.proficiency === 'Learning';
+
+  return (
+    <motion.div
+      className={`
+        md:col-span-1
+        bg-surface/40 backdrop-blur-sm
+        border border-border
+        rounded-sm
+        px-3 py-2
+        flex items-center justify-between
+        hover:border-mint/40 transition-all duration-300
+        cursor-default group/tile
+        hover:-translate-y-0.5
+      `}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.4 }}
+    >
+      <div className="flex items-center gap-2">
+        {isLearning && (
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-mint opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-mint"></span>
+          </span>
+        )}
+        <span className="font-display text-[12px] font-medium text-foreground tracking-tight">
+          {skill.name}
+        </span>
+      </div>
+      <span className="font-mono text-[8px] uppercase tracking-widest text-text-secondary/50">
+        {skill.proficiency}
+      </span>
+    </motion.div>
+  );
+});
+MicroSkillTile.displayName = 'MicroSkillTile';
 
 const Skills = () => {
   // Flatten all skills into a single array for the Bento Grid,
@@ -165,14 +242,16 @@ const Skills = () => {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-auto">
-        {allSkillsWithColors.map((s, i) => (
-          <SkillTile
-            key={s.name}
-            skill={s}
-            color={s.color}
-            delay={i * 0.05}
-          />
-        ))}
+        {allSkillsWithColors.map((s, i) => {
+          const delay = i * 0.05;
+          if (s.proficiency === 'Expert') {
+            return <CoreSkillTile key={s.name} skill={s} color={s.color} delay={delay} />;
+          }
+          if (s.proficiency === 'Advanced') {
+            return <StandardSkillTile key={s.name} skill={s} color={s.color} delay={delay} />;
+          }
+          return <MicroSkillTile key={s.name} skill={s} color={s.color} delay={delay} />;
+        })}
       </div>
     </section>
   );
