@@ -360,7 +360,7 @@ const MobileHero = () => {
 
 const Hero = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const scrollProgress = useRef(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -375,7 +375,8 @@ const Hero = () => {
     const updateProgress = () => {
       const scrollY = window.scrollY;
       const maxScroll = window.innerHeight * 0.8;
-      scrollProgress.current = Math.min(scrollY / maxScroll, 1);
+      const progress = Math.min(scrollY / maxScroll, 1);
+      setScrollProgress(progress);
     };
 
     window.addEventListener("scroll", updateProgress, { passive: true });
@@ -396,7 +397,7 @@ const Hero = () => {
       >
         <div className="absolute inset-0 z-0">
           <Canvas
-            frameloop="demand"
+            frameloop="always"
             camera={{ position: [0, 0, 5], fov: 50 }}
             dpr={[1, 1.5]}
             onCreated={({ gl, invalidate }) => {
@@ -407,7 +408,7 @@ const Hero = () => {
             }}
           >
             <Suspense fallback={null}>
-              <WireframeMesh progress={scrollProgress.current} />
+              <WireframeMesh progress={scrollProgress} />
             </Suspense>
           </Canvas>
         </div>
@@ -419,7 +420,7 @@ const Hero = () => {
             transition={{ delay: 0.5, duration: 0.7 }}
             className="will-change-transform"
           >
-            <HeroMainContent progress={scrollProgress.current} />
+            <HeroMainContent progress={scrollProgress} />
           </motion.div>
         </div>
       </section>
