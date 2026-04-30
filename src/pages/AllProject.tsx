@@ -75,6 +75,7 @@ const AllProject = () => {
   const archiveContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     // Cinematic entrance for the featured projects
     const featuredSections = gsap.utils.toArray<HTMLElement>(".featured-project");
 
