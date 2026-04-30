@@ -313,45 +313,58 @@ const HorizontalScrollName = () => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ─── Mobile Simple Hero ───────────────────────────────────────────────────────
-const MobileHero = () => {
+const MobileHero = ({ progress = 0 }) => {
   return (
     <section
       id="hero"
       className="relative min-h-[100dvh] w-full overflow-hidden flex flex-col items-center justify-center bg-[#080808] px-6 py-20"
     >
       <div className="absolute inset-0 z-0">
-        <Canvas camera={{ position: [0, 0, 5], fov: 50 }} dpr={[1, 1.5]}>
+        <Canvas
+          frameloop="always"
+          camera={{ position: [0, 0, 5], fov: 50 }}
+          dpr={[1, 1.5]}
+        >
           <Suspense fallback={null}>
-            <WireframeMesh />
+            <WireframeMesh progress={progress} />
           </Suspense>
         </Canvas>
       </div>
 
       <div className="relative z-10 w-full flex flex-col items-center text-center">
-        <StatusBadge />
+        <motion.div
+          style={{
+            scale: 1 + progress * 1.5,
+            opacity: 1 - progress * 1.2,
+            filter: `blur(${progress * 8}px)`
+          }}
+          className="flex flex-col items-center"
+        >
+          <StatusBadge />
 
-        <h1 className="text-5xl font-black leading-[0.95] tracking-tighter text-white mb-6">
-          <span className="block">I Build Full Stack &</span>
-          <span className="block text-red-600">AI Systems</span>
-          <span className="block">That Drive Results</span>
-        </h1>
+          <h1 className="text-5xl font-black leading-[0.95] tracking-tighter text-white mb-6">
+            <span className="block">I Build Full Stack &</span>
+            <span className="block text-red-600">AI Systems</span>
+            <span className="block">That Drive Results</span>
+          </h1>
 
-        <p className="text-slate-400 text-sm leading-relaxed max-w-sm mb-10 font-medium">
-          Transforming ideas into high-performance SaaS, Web Apps, and AI Tools
-          with MERN and Next.js.
-        </p>
+          <p className="text-slate-400 text-sm leading-relaxed max-w-sm mb-10 font-medium">
+            Transforming ideas into high-performance SaaS, Web Apps, and AI Tools
+            with MERN and Next.js.
+          </p>
 
-        <div className="grid grid-cols-2 gap-4 mt-16 w-full max-w-xs">
-          {["MERN", "Next.js", "AI Tools", "SaaS"].map((tech) => (
-            <div
-              key={tech}
-              className="flex items-center gap-2 justify-center py-2 px-3 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold text-slate-400"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-              {tech}
-            </div>
-          ))}
-        </div>
+          <div className="grid grid-cols-2 gap-4 mt-16 w-full max-w-xs">
+            {["MERN", "Next.js", "AI Tools", "SaaS"].map((tech) => (
+              <div
+                key={tech}
+                className="flex items-center gap-2 justify-center py-2 px-3 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold text-slate-400"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+                {tech}
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -370,7 +383,7 @@ const Hero = () => {
   }, []);
 
   useEffect(() => {
-    if (isMobile) return;
+    if (!isMobile) return;
 
     const updateProgress = () => {
       const scrollY = window.scrollY;
@@ -383,8 +396,8 @@ const Hero = () => {
     return () => window.removeEventListener("scroll", updateProgress);
   }, [isMobile]);
 
-  // ── Mobile: classic simple layout ──
-  if (isMobile) return <MobileHero />;
+  // ── Mobile: now with Spatial Tunnel ──
+  if (isMobile) return <MobileHero progress={scrollProgress} />;
 
   // ── Desktop: 3-part GSAP layout ──
   return (
