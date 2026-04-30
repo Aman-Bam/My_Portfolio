@@ -40,7 +40,7 @@ const WireframeMesh = ({ progress = 0 }: { progress?: number }) => {
     camera.updateProjectionMatrix();
 
     // Scale and position based on scroll progress
-    const scale = 1 + progress * 15; // Scale up to 16x
+    const scale = 1 + Math.pow(progress, 2) * 40;
     groupRef.current.scale.set(scale, scale, scale);
     groupRef.current.position.z = -progress * 10; // Move camera "into" the mesh
   });
@@ -52,9 +52,9 @@ const WireframeMesh = ({ progress = 0 }: { progress?: number }) => {
           wireframe
           color="#FF6B2B"
           transparent
-          opacity={0.15 + progress * 0.3}
+          opacity={0.15 + progress * 0.6}
           emissive="#FF6B2B"
-          emissiveIntensity={progress * 2}
+          emissiveIntensity={progress * 3}
         />
       </mesh>
       <mesh geometry={geo} scale={1.3} rotation-y={Math.PI / 4}>
@@ -62,7 +62,7 @@ const WireframeMesh = ({ progress = 0 }: { progress?: number }) => {
           wireframe
           color="#FF6B2B"
           transparent
-          opacity={0.06 + progress * 0.1}
+          opacity={0.06 + progress * 0.2}
         />
       </mesh>
       <pointLight position={[5, 5, 5]} intensity={1} />
