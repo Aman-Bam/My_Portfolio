@@ -26,7 +26,7 @@ const ALL_WORKS = [
     featured: true,
   },
   {
-    id: "Employee Management System (RBAC Dashboard)",
+    id: "employment-system",
     title: "Employee Management System (RBAC Dashboard)",
     description: "Advanced role-based dashboard for seamless employee management with precise access control.",
     tech: ["TypeScript", "Next.js 14", "Tailwind CSS", "Shadcn UI"],
@@ -44,7 +44,7 @@ const ALL_WORKS = [
     image: "Project_img/bankingsystem.png",
     github: "https://github.com/Aman-Bam/Banking-System",
     live: "",
-    featured: false,
+    featured: true,
   },
   {
     id: "lead-extension",
@@ -59,7 +59,7 @@ const ALL_WORKS = [
   },
   {
     id: "dentocare",
-    title: " la Dentocare",
+    title: "DENTOCARE",
     description: "Professional dental clinic management system focusing on appointment scheduling and patient record tracking.",
     tech: ["React", "Tailwind CSS", "Node.js", "MongoDB"],
     image: "Project_img/Dentocare.png",
@@ -242,6 +242,42 @@ const AllProject = () => {
                         </span>
                       ))}
                     </div>
+
+                    <div className="flex items-center justify-between pt-4 border-t border-white/5 mt-auto">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/project/${project.id}`);
+                        }}
+                        className="text-[10px] font-bold uppercase tracking-widest text-white hover:text-mint transition-colors flex items-center gap-2"
+                      >
+                        Case Study <ExternalLink size={12} />
+                      </button>
+                      <div className="flex gap-3">
+                        {project.github && (
+                          <a 
+                            href={project.github} 
+                            target="_blank" 
+                            rel="noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-zinc-500 hover:text-white transition-colors"
+                          >
+                            <GitHubLogoIcon width={16} height={16} />
+                          </a>
+                        )}
+                        {project.live && (
+                          <a 
+                            href={project.live} 
+                            target="_blank" 
+                            rel="noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-zinc-500 hover:text-white transition-colors"
+                          >
+                            <ExternalLink size={16} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
               );
@@ -256,9 +292,14 @@ const AllProject = () => {
           <h2 className="text-5xl md:text-8xl font-black italic uppercase tracking-tighter mb-12">
             Want to <span className="text-mint">Collaborate</span>?
           </h2>
-          <button className="px-12 py-5 bg-white text-black font-black rounded-full text-xl hover:scale-110 transition-transform">
+          <a 
+            href="https://wa.me/919259269317"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-12 py-5 bg-white text-black font-black rounded-full text-xl hover:scale-110 transition-transform"
+          >
             Get In Touch
-          </button>
+          </a>
         </div>
       </footer>
     </div>

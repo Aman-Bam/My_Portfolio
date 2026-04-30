@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect, useMemo, Suspense } from "react";
-import { motion } from "framer-motion";
+import { useRef, useState, useEffect, useMemo, Suspense, memo } from "react";
+import { motion, useSpring, useTransform } from "framer-motion";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import gsap from "gsap";
@@ -7,75 +7,58 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const WireframeMesh = ({ progress = 0 }: { progress?: number }) => {
-  const groupRef = useRef<THREE.Group>(null);
-  const mouse = useRef({ x: 0, y: 0 });
-  const target = useRef({ x: 0, y: 0 });
+// Shared smooth progress value for R3F
+const smoothProgress = { value: 0 };
 
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      mouse.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
-      mouse.current.y = (e.clientY / window.innerHeight - 0.5) * 2;
-    };
-    window.addEventListener("mousemove", handler);
-    return () => window.removeEventListener("mousemove", handler);
+const Particles = memo(() => {
+  const count = 2500;
+  const points = useMemo(() => {
+    const p = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      p[i * 3] = (Math.random() - 0.5) * 25;
+      p[i * 3 + 1] = (Math.random() - 0.5) * 25;
+      p[i * 3 + 2] = (Math.random() - 0.5) * 40;
+    }
+    return p;
   }, []);
 
-  const geo = useMemo(() => new THREE.IcosahedronGeometry(2, 1), []);
+  const ref = useRef<THREE.Points>(null);
 
-  useFrame(({ camera }, delta) => {
-    if (!groupRef.current) return;
-    groupRef.current.rotation.y += 0.001;
-    target.current.x += (mouse.current.y * 0.26 - target.current.x) * 0.05;
-    target.current.y += (mouse.current.x * 0.26 - target.current.y) * 0.05;
-    groupRef.current.rotation.x +=
-      (target.current.x - groupRef.current.rotation.x) * 0.05;
-
-    // Cinematic Camera Fly-Through
-    const targetZ = 5 - progress * 15; // Moves from 5 to -10
-    camera.position.z += (targetZ - camera.position.z) * 0.1;
-
-    // Dynamic FOV Shift to increase speed sensation
-    camera.fov = 50 + progress * 20;
-    camera.updateProjectionMatrix();
-
-    // Scale and position based on scroll progress
-    const scale = 1 + Math.pow(progress, 2) * 40;
-    groupRef.current.scale.set(scale, scale, scale);
-    groupRef.current.position.z = -progress * 10; // Move camera "into" the mesh
+  useFrame(() => {
+    if (!ref.current) return;
+    ref.current.rotation.z += 0.0003;
+    // Ultra-smooth lerp for particle position
+    ref.current.position.z = THREE.MathUtils.lerp(ref.current.position.z, smoothProgress.value * 20, 0.05);
   });
 
   return (
-    <group ref={groupRef}>
-      <mesh geometry={geo}>
-        <meshStandardMaterial
-          wireframe
-          color="#FF6B2B"
-          transparent
-          opacity={0.15 + progress * 0.6}
-          emissive="#FF6B2B"
-          emissiveIntensity={progress * 3}
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={points.length / 3}
+          array={points}
+          itemSize={3}
         />
-      </mesh>
-      <mesh geometry={geo} scale={1.3} rotation-y={Math.PI / 4}>
-        <meshStandardMaterial
-          wireframe
-          color="#FF6B2B"
-          transparent
-          opacity={0.06 + progress * 0.2}
-        />
-      </mesh>
-      <pointLight position={[5, 5, 5]} intensity={1} />
-    </group>
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.015}
+        color="#FF6B2B"
+        transparent
+        opacity={0.25}
+        sizeAttenuation
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
   );
-};
+});
 
-const StatusBadge = () => (
+const StatusBadge = memo(() => (
   <motion.div
     initial={{ opacity: 0, y: -20 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.3, duration: 0.6 }}
-    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 mb-8"
+    transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
+    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 mb-8 backdrop-blur-md"
   >
     <span className="relative flex h-2 w-2">
       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
@@ -85,43 +68,21 @@ const StatusBadge = () => (
       Available for Q4 2024 Projects
     </span>
   </motion.div>
-);
+));
 
-const LetterReveal = ({
-  text,
-  delay = 0,
-  className = "",
-}: {
-  text: string;
-  delay?: number;
-  className?: string;
-}) => (
-  <span className="inline-flex overflow-hidden">
-    {text.split("").map((char, i) => (
-      <motion.span
-        key={i}
-        initial={{ y: "100%" }}
-        animate={{ y: 0 }}
-        transition={{
-          duration: 0.6,
-          delay: delay + i * 0.06,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-        className={className}
-      >
-        {char === " " ? "\u00A0" : char}
-      </motion.span>
-    ))}
-  </span>
-);
+const HeroMainContent = memo(({ springProgress }: { springProgress: any }) => {
+  // UseTransform for silky smooth DOM updates tied to the spring
+  const scale = useTransform(springProgress, [0, 1], [1, 4]);
+  const opacity = useTransform(springProgress, [0, 0.4, 0.7], [1, 0.8, 0]);
+  const y = useTransform(springProgress, [0, 1], [0, -100]);
 
-const HeroMainContent = ({ progress = 0 }) => {
   return (
     <motion.div
       style={{
-        scale: 1 + progress * 2,
-        opacity: 1 - progress * 1.5,
-        filter: `blur(${progress * 10}px)`
+        scale,
+        opacity,
+        y,
+        pointerEvents: springProgress.get() > 0.5 ? "none" : "auto"
       }}
       className="flex flex-col items-center"
     >
@@ -129,315 +90,120 @@ const HeroMainContent = ({ progress = 0 }) => {
 
       <div className="relative mb-6">
         <h1
-          className="text-4xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white leading-[0.9] text-center"
-          style={{ letterSpacing: "-0.04em" }}
+          className="text-5xl md:text-8xl lg:text-9xl font-black tracking-tighter text-white leading-[0.8] text-center"
+          style={{ letterSpacing: "-0.06em" }}
         >
           <span className="block mb-2">I Build Full Stack &</span>
-          <span className="block bg-clip-text  text-red-600 pb-2">
+          <span className="block bg-clip-text text-red-600 pb-2">
             AI Systems
           </span>
-          <span className="block mt-2">That Drive Real Results</span>
+          <span className="block mt-2">That Drive Results</span>
         </h1>
       </div>
 
       <motion.p
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.6 }}
-        className="text-slate-400 text-sm md:text-lg max-w-2xl text-center font-medium leading-relaxed mb-10 px-4"
+        transition={{ delay: 0.8, duration: 0.8, ease: "easeOut" }}
+        className="text-slate-400 text-base md:text-xl max-w-2xl text-center font-medium leading-relaxed mb-12 px-4"
       >
         Transforming ideas into high-performance SaaS, Web Apps, and AI Tools
-        with MERN, Next.js, and Tailwind CSS.
+        with MERN, Next.js, and TypeScript.
       </motion.p>
-      <div className="grid grid-cols-2 gap-4 mt-16 w-full max-w-xs">
-        {["MERN", "Next.js", "AI Tools", "SaaS"].map((tech) => (
-          <div
+      
+      <div className="flex flex-wrap justify-center gap-4 mt-8">
+        {["MERN", "Next.js", "AI Tools", "SaaS"].map((tech, i) => (
+          <motion.div
             key={tech}
-            className="flex items-center gap-2 justify-center py-2 px-3 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold text-slate-400"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1 + i * 0.1, duration: 0.5 }}
+            className="flex items-center gap-2 py-2 px-5 bg-white/5 border border-white/10 rounded-full text-[12px] font-bold text-slate-300 backdrop-blur-sm"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+            <span className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_12px_rgba(249,115,22,0.6)]" />
             {tech}
-          </div>
+          </motion.div>
         ))}
       </div>
     </motion.div>
   );
-};
-
-// ─── GSAP Horizontal Scroll Name Section ─────────────────────────────────────
-//even batter
-const HorizontalScrollName = () => {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const textRef = useRef<HTMLHeadingElement>(null);
-  const charRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const scrollTriggerRef = useRef<ScrollTrigger[]>([]);
-
-  const text = "Welcome Back";
-  const chars = useMemo(() => text.split(""), [text]);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  useEffect(() => {
-    const wrapper = wrapperRef.current;
-    const textEl = textRef.current;
-    if (!wrapper || !textEl) return;
-
-    // Use matchMedia for better performance
-    const mm = gsap.matchMedia();
-
-    mm.add("(min-width: 768px)", () => {
-      const scrollTween = gsap.to(textEl, {
-        xPercent: -100,
-        ease: "none",
-        scrollTrigger: {
-          trigger: wrapper,
-          pin: true,
-          start: "top top",
-          end: "+=300%",
-          scrub: 1,
-          anticipatePin: 1,
-        },
-      });
-
-      scrollTriggerRef.current.push(scrollTween.scrollTrigger!);
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: textEl,
-          containerAnimation: scrollTween,
-          start: "left 100%",
-          end: "right 0%",
-          scrub: 1,
-        },
-      });
-
-      charRefs.current.forEach((char, index) => {
-        if (!char) return;
-        tl.from(char, {
-          yPercent: gsap.utils.random(-150, 150),
-          rotation: gsap.utils.random(-30, 30),
-          scale: 0.5,
-          opacity: 0,
-          ease: "back.out(2)",
-          duration: 0.5,
-        }, index * 0.1);
-      });
-    });
-
-    mm.add("(max-width: 767px)", () => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: textEl,
-          start: "top 90%",
-          end: "bottom 10%",
-          scrub: 1,
-        },
-      });
-
-      charRefs.current.forEach((char, index) => {
-        if (!char) return;
-        tl.from(char, {
-          yPercent: gsap.utils.random(-120, 120),
-          rotation: gsap.utils.random(-25, 25),
-          scale: 0.4,
-          opacity: 0,
-          ease: "back.out(2)",
-          duration: 0.5,
-        }, index * 0.1);
-      });
-    });
-
-    return () => {
-      mm.revert();
-      scrollTriggerRef.current.forEach((st) => st?.kill());
-      scrollTriggerRef.current = [];
-    };
-  }, [chars]);
-
-  return (
-    <div
-      ref={wrapperRef}
-      className="scroll-name-wrapper"
-      style={{
-        overflow: "hidden",
-        height: isMobile ? "auto" : "100vh",
-        minHeight: isMobile ? "60vh" : undefined,
-        display: "flex",
-        alignItems: "center",
-        background: "#000000",
-        position: "relative",
-      }}
-    >
-      <h1
-        ref={textRef}
-        style={{
-          display: "flex",
-          width: "max-content",
-          whiteSpace: "nowrap",
-          gap: "0.1em",
-          paddingLeft: "100vw",
-          fontSize: "clamp(3rem, 12vw, 15rem)",
-          fontWeight: 700,
-          lineHeight: 1,
-          margin: 0,
-          letterSpacing: "-0.03em",
-          willChange: "transform", // Performance hint
-        }}
-      >
-        {chars.map((char, i) => (
-          <span
-            key={`${char}-${i}`} // Better key for duplicate chars
-            ref={(el) => {
-              charRefs.current[i] = el;
-            }}
-            style={{
-              display: "inline-block",
-              minWidth: char === " " ? "0.4em" : undefined,
-              color: "#ffffff",
-              willChange: "transform, opacity",
-            }}
-          >
-            {char === " " ? "\u00A0" : char}
-          </span>
-        ))}
-      </h1>
-    </div>
-  );
-};
-// ─────────────────────────────────────────────────────────────────────────────
-
-// ─── Mobile Simple Hero ───────────────────────────────────────────────────────
-const MobileHero = ({ progress = 0 }) => {
-  return (
-    <section
-      id="hero"
-      className="relative min-h-[100dvh] w-full overflow-hidden flex flex-col items-center justify-center bg-[#080808] px-6 py-20"
-    >
-      <div className="absolute inset-0 z-0">
-        <Canvas
-          frameloop="always"
-          camera={{ position: [0, 0, 5], fov: 50 }}
-          dpr={[1, 1.5]}
-        >
-          <Suspense fallback={null}>
-            <WireframeMesh progress={progress} />
-          </Suspense>
-        </Canvas>
-      </div>
-
-      <div className="relative z-10 w-full flex flex-col items-center text-center">
-        <motion.div
-          style={{
-            scale: 1 + progress * 1.5,
-            opacity: 1 - progress * 1.2,
-            filter: `blur(${progress * 8}px)`
-          }}
-          className="flex flex-col items-center"
-        >
-          <StatusBadge />
-
-          <h1 className="text-5xl font-black leading-[0.95] tracking-tighter text-white mb-6">
-            <span className="block">I Build Full Stack &</span>
-            <span className="block text-red-600">AI Systems</span>
-            <span className="block">That Drive Results</span>
-          </h1>
-
-          <p className="text-slate-400 text-sm leading-relaxed max-w-sm mb-10 font-medium">
-            Transforming ideas into high-performance SaaS, Web Apps, and AI Tools
-            with MERN and Next.js.
-          </p>
-
-          <div className="grid grid-cols-2 gap-4 mt-16 w-full max-w-xs">
-            {["MERN", "Next.js", "AI Tools", "SaaS"].map((tech) => (
-              <div
-                key={tech}
-                className="flex items-center gap-2 justify-center py-2 px-3 bg-white/5 border border-white/10 rounded-lg text-[10px] font-bold text-slate-400"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-                {tech}
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-// ─────────────────────────────────────────────────────────────────────────────
+});
 
 const Hero = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dpr, setDpr] = useState(1);
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
+    setDpr(Math.min(window.devicePixelRatio, 2));
   }, []);
+  
+  // Spring progress for DOM elements
+  const xSpring = useSpring(0, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  const indicatorOpacity = useTransform(xSpring, [0, 0.2], [1, 0]);
+  const indicatorY = useTransform(xSpring, [0, 0.2], [0, 20]);
 
   useEffect(() => {
-    if (!isMobile) return;
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: 1.5,
+        onUpdate: (self) => {
+          smoothProgress.value = self.progress;
+          xSpring.set(self.progress);
+        },
+      });
+    });
+    return () => ctx.revert();
+  }, [xSpring]);
 
-    const updateProgress = () => {
-      const scrollY = window.scrollY;
-      const maxScroll = window.innerHeight * 0.8;
-      const progress = Math.min(scrollY / maxScroll, 1);
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener("scroll", updateProgress, { passive: true });
-    return () => window.removeEventListener("scroll", updateProgress);
-  }, [isMobile]);
-
-  // ── Mobile: now with Spatial Tunnel ──
-  if (isMobile) return <MobileHero progress={scrollProgress} />;
-
-  // ── Desktop: 3-part GSAP layout ──
   return (
-    <>
-      {/* ── Part 1: Hero intro (RotatingLabel + wireframe bg) ── */}
+    <div className="bg-[#080808]">
       <section
+        ref={containerRef}
         id="hero"
-        className="relative w-full flex items-center justify-center"
-        style={{ minHeight: "60vh", background: "#080808" }}
+        className="relative h-[150vh] w-full"
       >
-        <div className="absolute inset-0 z-0">
-          <Canvas
-            frameloop="always"
-            camera={{ position: [0, 0, 5], fov: 50 }}
-            dpr={[1, 1.5]}
-            onCreated={({ gl, invalidate }) => {
-              gl.setClearColor("#080808");
-              const handler = () => invalidate();
-              window.addEventListener("mousemove", handler);
-              return () => window.removeEventListener("mousemove", handler);
-            }}
-          >
-            <Suspense fallback={null}>
-              <WireframeMesh progress={scrollProgress} />
-            </Suspense>
-          </Canvas>
-        </div>
+        <div className="sticky top-0 h-screen w-full overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            <Canvas
+              camera={{ position: [0, 0, 5], fov: 50 }}
+              dpr={dpr}
+              gl={{ 
+                antialias: true,
+                alpha: true,
+                powerPreference: "high-performance"
+              }}
+            >
+              <Suspense fallback={null}>
+                <Particles />
+              </Suspense>
+            </Canvas>
+          </div>
 
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto pt-32 pb-12 will-change-transform">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.7 }}
-            className="will-change-transform"
+          <div className="relative z-10 h-full flex items-center justify-center px-6">
+            <HeroMainContent springProgress={xSpring} />
+          </div>
+          
+          <motion.div 
+            style={{ 
+              opacity: indicatorOpacity,
+              y: indicatorY
+            }}
+            className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
           >
-            <HeroMainContent progress={scrollProgress} />
+            <span className="text-[10px] font-mono tracking-[0.3em] text-orange-500/80 uppercase font-bold">Initiate Fly-Through</span>
+            <div className="w-[1px] h-16 bg-gradient-to-b from-orange-500 to-transparent animate-pulse" />
           </motion.div>
         </div>
       </section>
-    </>
+    </div>
   );
 };
 
