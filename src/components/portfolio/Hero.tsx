@@ -412,11 +412,12 @@ const Hero = () => {
           </Canvas>
         </div>
 
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto pt-32 pb-12">
+        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto pt-32 pb-12 will-change-transform">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.7 }}
+            className="will-change-transform"
           >
             <HeroMainContent progress={scrollProgress.current} />
           </motion.div>
