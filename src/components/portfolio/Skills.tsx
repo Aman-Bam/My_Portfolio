@@ -84,57 +84,94 @@ const groups: SkillGroup[] = [
   },
 ];
 
-const SkillTile = memo(({ skill, isPrimary, color, delay }: { skill: Skill; isPrimary: boolean; color: string; delay: number }) => (
-  <motion.div
-    className={`bg-surface border ${isPrimary ? 'border-mint/40' : 'border-border'} rounded-sm px-3 py-2 flex items-center gap-2 hover:border-mint/60 hover:-translate-y-0.5 transition-all cursor-default group/tile`}
-    style={isPrimary ? { boxShadow: '0 0 20px rgba(0,232,122,0.08)' } : undefined}
-    initial={{ opacity: 0, scale: 0.8 }}
-    whileInView={{ opacity: 1, scale: 1 }}
-    viewport={{ once: true }}
-    transition={{ delay, duration: 0.3 }}
-  >
-    <span className={`w-1 h-1 rounded-full ${color} shrink-0`} />
-    <div className="flex flex-col">
-      <span className="font-display text-[13px] font-medium text-foreground">{skill.name}</span>
-      {skill.statement && (
-        <span className="text-[10px] text-text-secondary opacity-0 group-hover/tile:opacity-100 transition-opacity duration-200 line-clamp-1">
-          {skill.statement}
+const SkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; delay: number }) => {
+  const isExpert = skill.proficiency === 'Expert';
+  const isAdvanced = skill.proficiency === 'Advanced';
+
+  // Determine grid span based on proficiency
+  const gridSpan = isExpert
+    ? 'md:col-span-2 md:row-span-2'
+    : isAdvanced
+    ? 'md:col-span-2'
+    : 'md:col-span-1';
+
+  return (
+    <motion.div
+      className={`
+        ${gridSpan}
+        bg-surface/80 backdrop-blur-md
+        border border-border
+        rounded-sm
+        p-4
+        flex flex-col justify-between
+        hover:border-mint/60 hover:-translate-y-1 transition-all duration-300
+        cursor-default group/tile
+        ${isExpert ? 'border-mint/40 shadow-[0_0_20px_rgba(0,232,122,0.08)]' : ''}
+      `}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.4 }}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <span className={`w-1.5 h-1.5 rounded-full ${color} shrink-0`} />
+        <span className="font-display text-sm font-bold text-foreground tracking-tight">
+          {skill.name}
         </span>
-      )}
-    </div>
-  </motion.div>
-));
+      </div>
+
+      <div className="mt-auto">
+        {skill.statement && (
+          <p className="text-text-secondary text-[11px] leading-relaxed mb-3 opacity-80 group-hover/tile:opacity-100 transition-opacity">
+            {skill.statement}
+          </p>
+        )}
+
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-mono text-[9px] uppercase tracking-widest text-text-secondary/60">
+            {skill.proficiency}
+          </span>
+          {skill.projectLink && (
+            <a
+              href={skill.projectLink}
+              className="text-[10px] font-mono text-mint hover:underline underline-offset-2"
+            >
+              VIEW_PROJ
+            </a>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+});
 SkillTile.displayName = 'SkillTile';
 
-const Skills = () => (
-  <section id="skills" className="py-32 px-6 md:px-12 max-w-7xl mx-auto">
-    <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-mint mb-6">004 — TOOLS OF TRADE</p>
-    <h2 className="font-display font-extrabold tracking-tight leading-[0.95] mb-20" style={{ fontSize: 'clamp(48px, 8vw, 80px)' }}>
-      WHAT I<br /><span className="text-red-600">WORK</span> WITH.
-    </h2>
+const Skills = () => {
+  // Flatten all skills into a single array for the Bento Grid,
+  // but keep track of their group color
+  const allSkillsWithColors = groups.flatMap(g =>
+    g.skills.map(s => ({ ...s, color: g.color }))
+  );
 
-    <div className="grid md:grid-cols-2 lg:grid-cols-s3 gap-12">
-      {groups.map((g) => (
-        <div key={g.label}>
-          <p className="font-mono text-[10px] tracking-widest uppercase text-text-secondary mb-4 flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${g.color}`} />
-            {g.label}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {g.skills.map((s, i) => (
-              <SkillTile
-                key={s.name}
-                skill={s}
-                isPrimary={s.proficiency === 'Expert'}
-                color={g.color}
-                delay={i * 0.03}
-              />
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
-);
+  return (
+    <section id="skills" className="py-32 px-6 md:px-12 max-w-7xl mx-auto">
+      <p className="font-mono text-[11px] tracking-[0.25em] uppercase text-mint mb-6">004 — TOOLS OF TRADE</p>
+      <h2 className="font-display font-extrabold tracking-tight leading-[0.95] mb-20" style={{ fontSize: 'clamp(48px, 8vw, 80px)' }}>
+        WHAT I<br /><span className="text-red-600">WORK</span> WITH.
+      </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-auto">
+        {allSkillsWithColors.map((s, i) => (
+          <SkillTile
+            key={s.name}
+            skill={s}
+            color={s.color}
+            delay={i * 0.05}
+          />
+        ))}
+      </div>
+    </section>
+  );
+};
 
 export default Skills;
