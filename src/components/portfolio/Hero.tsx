@@ -359,11 +359,11 @@ const Hero = () => {
 
     const updateProgress = () => {
       const scrollY = window.scrollY;
-      const maxScroll = window.innerHeight * 0.6; // Trigger over 60% of viewport height
+      const maxScroll = window.innerHeight * 0.8;
       scrollProgress.current = Math.min(scrollY / maxScroll, 1);
     };
 
-    window.addEventListener("scroll", updateProgress);
+    window.addEventListener("scroll", updateProgress, { passive: true });
     return () => window.removeEventListener("scroll", updateProgress);
   }, [isMobile]);
 
