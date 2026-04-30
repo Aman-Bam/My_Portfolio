@@ -84,11 +84,36 @@ const groups: SkillGroup[] = [
   },
 ];
 
-const CoreSkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; delay: number }) => {
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: 'spring',
+      stiffness: 300,
+      damping: 20,
+    },
+  },
+};
+
+const CoreSkillTile = memo(({ skill, color }: { skill: Skill; color: string }) => {
   return (
     <motion.div
+      variants={itemVariants}
       className={`
-        md:col-span-2 md:row-span-2
+        md:col-span-2 lg:col-span-2 md:row-span-2
         bg-surface/80 backdrop-blur-md
         border border-border
         rounded-sm
@@ -98,10 +123,6 @@ const CoreSkillTile = memo(({ skill, color, delay }: { skill: Skill; color: stri
         cursor-default group/tile
         border-mint/40 shadow-[0_0_20px_rgba(0,232,122,0.08)] hover:shadow-[0_0_40px_rgba(0,232,122,0.3)]
       `}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay, duration: 0.4 }}
     >
       <div className="flex items-center gap-2 mb-2">
         <span className={`w-1.5 h-1.5 rounded-full ${color} shrink-0`} />
@@ -140,11 +161,12 @@ const CoreSkillTile = memo(({ skill, color, delay }: { skill: Skill; color: stri
 });
 CoreSkillTile.displayName = 'CoreSkillTile';
 
-const StandardSkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; delay: number }) => {
+const StandardSkillTile = memo(({ skill, color }: { skill: Skill; color: string }) => {
   return (
     <motion.div
+      variants={itemVariants}
       className={`
-        md:col-span-2
+        md:col-span-2 lg:col-span-2
         bg-surface/80 backdrop-blur-md
         border border-border
         rounded-sm
@@ -154,10 +176,6 @@ const StandardSkillTile = memo(({ skill, color, delay }: { skill: Skill; color: 
         cursor-default group/tile
         hover:-translate-y-0.5
       `}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay, duration: 0.4 }}
     >
       <div className="flex items-center gap-2 mb-2">
         <span className={`w-1.5 h-1.5 rounded-full ${color} shrink-0`} />
@@ -187,13 +205,14 @@ const StandardSkillTile = memo(({ skill, color, delay }: { skill: Skill; color: 
 });
 StandardSkillTile.displayName = 'StandardSkillTile';
 
-const MicroSkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; delay: number }) => {
+const MicroSkillTile = memo(({ skill, color }: { skill: Skill; color: string }) => {
   const isLearning = skill.proficiency === 'Learning';
 
   return (
     <motion.div
+      variants={itemVariants}
       className={`
-        md:col-span-1
+        md:col-span-1 lg:col-span-1
         bg-surface/40 backdrop-blur-sm
         border border-border
         rounded-sm
@@ -203,15 +222,11 @@ const MicroSkillTile = memo(({ skill, color, delay }: { skill: Skill; color: str
         cursor-default group/tile
         hover:-translate-y-0.5
       `}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay, duration: 0.4 }}
     >
       <div className="flex items-center gap-2">
         {isLearning && (
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-mint opacity-75"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-mint opacity-40"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-mint"></span>
           </span>
         )}
@@ -241,18 +256,23 @@ const Skills = () => {
         WHAT I<br /><span className="text-red-600">WORK</span> WITH.
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-auto">
-        {allSkillsWithColors.map((s, i) => {
-          const delay = i * 0.05;
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-auto"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      >
+        {allSkillsWithColors.map((s) => {
           if (s.proficiency === 'Expert') {
-            return <CoreSkillTile key={s.name} skill={s} color={s.color} delay={delay} />;
+            return <CoreSkillTile key={s.name} skill={s} color={s.color} />;
           }
           if (s.proficiency === 'Advanced') {
-            return <StandardSkillTile key={s.name} skill={s} color={s.color} delay={delay} />;
+            return <StandardSkillTile key={s.name} skill={s} color={s.color} />;
           }
-          return <MicroSkillTile key={s.name} skill={s} color={s.color} delay={delay} />;
+          return <MicroSkillTile key={s.name} skill={s} color={s.color} />;
         })}
-      </div>
+      </motion.div>
     </section>
   );
 };
