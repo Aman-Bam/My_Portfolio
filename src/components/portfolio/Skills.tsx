@@ -1,10 +1,18 @@
 import { memo, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
   Code2, 
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  LayoutGrid,
+  Server,
+  Cpu,
+  Database,
+  Terminal,
+  Zap,
+  Blocks,
+  Network
 } from 'lucide-react';
 
 type Proficiency = 'Expert' | 'Advanced' | 'Proficient' | 'Learning';
@@ -20,13 +28,17 @@ interface Skill {
 interface SkillGroup {
   label: string;
   color: string;
+  accent: string;
+  icon: React.ReactNode;
   skills: Skill[];
 }
 
 const SKILL_GROUPS: SkillGroup[] = [
   {
     label: 'Frontend Systems',
-    color: 'mint',
+    color: 'emerald',
+    accent: '#10b981',
+    icon: <LayoutGrid className="w-4 h-4" />,
     skills: [
       { 
         name: 'React 19', 
@@ -49,11 +61,14 @@ const SKILL_GROUPS: SkillGroup[] = [
       { name: 'Tailwind CSS', proficiency: 'Advanced' },
       { name: 'Framer Motion', proficiency: 'Advanced' },
       { name: 'Three.js', proficiency: 'Proficient' },
+      { name: 'GSAP', proficiency: 'Advanced' },
     ]
   },
   {
     label: 'Backend & Architecture',
     color: 'amber',
+    accent: '#f59e0b',
+    icon: <Database className="w-4 h-4" />,
     skills: [
       { 
         name: 'Node.js', 
@@ -61,8 +76,8 @@ const SKILL_GROUPS: SkillGroup[] = [
         statement: 'Building high-throughput, event-driven microservices and real-time WebSocket systems.',
         projectLink: '#projects'
       },
-      { name: 'Python', proficiency: 'Advanced' },
-      { name: 'Go', proficiency: 'Learning' },
+      { name: 'Express', proficiency: 'Expert' },
+      { name: 'Python', proficiency: 'Learning' },
       { name: 'PostgreSQL', proficiency: 'Advanced' },
       { name: 'MongoDB', proficiency: 'Advanced' },
       { name: 'Redis', proficiency: 'Advanced' },
@@ -70,77 +85,134 @@ const SKILL_GROUPS: SkillGroup[] = [
   },
   {
     label: 'AI & Intelligence',
-    color: 'purple-400',
+    color: 'violet',
+    accent: '#8b5cf6',
+    icon: <Cpu className="w-4 h-4" />,
     skills: [
+      { name: 'Agentic Workflows', proficiency: 'Expert' },
+      { name: 'Prompt Engineering', proficiency: 'Expert' },
       { 
         name: 'LLM Orchestration', 
         proficiency: 'Advanced',
         statement: 'Integrating Gemini/GPT with tool-calling and RAG for intelligent autonomous agents.'
       },
-      { name: 'Agentic Workflows', proficiency: 'Advanced' },
       { name: 'Vector DBs', proficiency: 'Proficient' },
-      { name: 'Prompt Engineering', proficiency: 'Expert' },
     ]
   }
 ];
 
-const CoreSkillTile = memo(({ skill, color }: { skill: Skill, color: string }) => (
+const CoreSkillTile = memo(({ skill, color, accent }: { skill: Skill, color: string, accent: string }) => (
   <motion.div
-    whileHover={{ y: -5, borderColor: `var(--color-${color})` }}
-    className={`col-span-2 row-span-2 group relative bg-[#121212] border border-white/10 rounded-sm p-6 flex flex-col justify-between transition-all duration-300 hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)]`}
-    style={{ willChange: 'transform' }} // GPU hint
+    whileHover={{ y: -5 }}
+    className="col-span-2 row-span-2 group relative bg-[#0a0a0a] border border-white/5 rounded-xl p-8 flex flex-col justify-between overflow-hidden"
   >
-    <div className="space-y-4">
+    {/* Animated Background Gradient */}
+    <div 
+      className="absolute top-0 right-0 w-32 h-32 blur-[80px] opacity-20 group-hover:opacity-40 transition-opacity duration-500"
+      style={{ backgroundColor: accent }}
+    />
+    
+    <div className="relative z-10 space-y-6">
       <div className="flex items-center justify-between">
-        <span className={`text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded-full border border-white/10 text-white bg-white/5`}>
-          {skill.proficiency}
-        </span>
+        <div className="flex items-center gap-2">
+          <div className="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:border-white/20 transition-colors">
+            <Blocks className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
+          </div>
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] px-2.5 py-1 rounded-md border border-white/5 text-zinc-400 bg-white/5">
+            {skill.proficiency}
+          </span>
+        </div>
         {skill.projectLink && (
-          <a href={skill.projectLink} className="text-zinc-500 hover:text-white transition-colors">
+          <motion.a 
+            whileHover={{ scale: 1.1 }}
+            href={skill.projectLink} 
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-zinc-500 hover:text-white hover:bg-white/10 transition-all"
+          >
             <ExternalLink className="w-4 h-4" />
-          </a>
+          </motion.a>
         )}
       </div>
-      <h3 className="font-display text-3xl font-black tracking-tight text-white group-hover:text-mint transition-colors">
-        {skill.name}
-      </h3>
-      <p className="text-zinc-500 text-sm font-mono leading-relaxed opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-        {skill.statement}
-      </p>
+
+      <div className="space-y-2">
+        <h3 className="font-display text-4xl font-black tracking-tighter text-white leading-none">
+          {skill.name}
+        </h3>
+        <p className="text-zinc-500 text-sm font-medium leading-relaxed max-w-sm">
+          {skill.statement}
+        </p>
+      </div>
     </div>
     
-    <div className="flex items-center gap-2 pt-4">
-      <div className={`h-[1px] flex-1 bg-gradient-to-r from-white/10 to-transparent`} />
-      <span className="text-[9px] font-mono text-zinc-600 uppercase tracking-[0.2em]">Signal_Strong</span>
+    <div className="relative z-10 flex items-center gap-4 pt-6">
+      <div className="h-[2px] flex-1 bg-white/5 overflow-hidden">
+        <motion.div 
+          initial={{ x: '-100%' }}
+          whileInView={{ x: '0%' }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="h-full w-full"
+          style={{ backgroundColor: accent }}
+        />
+      </div>
+      <span className="text-[9px] font-mono text-zinc-600 uppercase tracking-[0.3em]">System_Critical</span>
     </div>
+
+    {/* Decorative Border Glow */}
+    <div 
+      className="absolute inset-0 border border-white/0 group-hover:border-white/10 transition-colors duration-500 rounded-xl" 
+      style={{ boxShadow: `inset 0 0 40px ${accent}05` }}
+    />
   </motion.div>
 ));
 
-const StandardSkillTile = memo(({ skill, color }: { skill: Skill, color: string }) => (
+const StandardSkillTile = memo(({ skill, accent }: { skill: Skill, accent: string }) => (
   <motion.div
-    whileHover={{ y: -3 }}
-    className="col-span-1 row-span-1 bg-[#121212] border border-white/10 rounded-sm p-4 flex flex-col justify-between hover:border-mint/30 transition-all duration-300"
-    style={{ willChange: 'transform' }}
+    whileHover={{ y: -3, scale: 1.02 }}
+    className="col-span-1 row-span-1 bg-[#0a0a0a] border border-white/5 rounded-xl p-5 flex flex-col justify-between group relative overflow-hidden transition-all duration-300"
   >
-    <div className="flex items-center justify-between gap-2">
-      <h4 className="font-display font-bold text-sm text-white truncate">{skill.name}</h4>
-      <div className={`w-1.5 h-1.5 rounded-full bg-white/20`} />
+    <div className="flex items-center justify-between">
+      <h4 className="font-display font-bold text-base text-white tracking-tight">{skill.name}</h4>
+      <div className="p-1.5 rounded-md bg-white/5 border border-white/10 group-hover:border-white/20">
+        <Network className="w-3.5 h-3.5 text-zinc-500 group-hover:text-white" />
+      </div>
     </div>
-    <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mt-2">
-      {skill.proficiency}
-    </span>
+    
+    <div className="space-y-2">
+      <div className="flex items-center gap-1.5">
+        <div className="flex gap-0.5">
+          {[1, 2, 3, 4].map((i) => (
+            <div 
+              key={i} 
+              className={`w-1.5 h-1.5 rounded-full ${i <= 3 ? '' : 'opacity-20'}`}
+              style={{ backgroundColor: i <= 3 ? accent : 'currentColor' }}
+            />
+          ))}
+        </div>
+      </div>
+      <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest block">
+        {skill.proficiency}
+      </span>
+    </div>
+
+    {/* Subtle Hover Glow */}
+    <div 
+      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+      style={{ background: `radial-gradient(circle at top right, ${accent}10, transparent 70%)` }}
+    />
   </motion.div>
 ));
 
-const MicroSkillTile = memo(({ skill }: { skill: Skill }) => (
+const MicroSkillTile = memo(({ skill, accent }: { skill: Skill, accent: string }) => (
   <motion.div
-    whileHover={{ scale: 1.02 }}
-    className="col-span-1 row-span-1 bg-white/5 border border-white/10 rounded-sm px-3 py-2 flex items-center justify-center group transition-all duration-300"
-    style={{ willChange: 'transform' }}
+    whileHover={{ scale: 1.05 }}
+    className="col-span-1 row-span-1 bg-[#0d0d0d] border border-white/5 rounded-xl px-4 py-3 flex items-center justify-between group transition-all duration-300"
   >
-    <span className={`text-[10px] font-mono text-zinc-500 group-hover:text-mint transition-colors ${skill.proficiency === 'Learning' ? 'animate-pulse text-amber' : ''}`}>
+    <span className="text-xs font-medium text-zinc-400 group-hover:text-white transition-colors">
       {skill.name}
     </span>
+    <div 
+      className={`w-1.5 h-1.5 rounded-full ${skill.proficiency === 'Learning' ? 'animate-pulse' : 'opacity-40'}`}
+      style={{ backgroundColor: accent }}
+    />
   </motion.div>
 ));
 
@@ -149,119 +221,161 @@ const gridVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.05
+      staggerChildren: 0.08
     }
   }
 };
 
 const tileVariants = {
-  hidden: { opacity: 0, y: 10 },
+  hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: { 
     opacity: 1, 
+    scale: 1,
     y: 0,
     transition: {
-      duration: 0.4,
-      ease: "easeOut"
+      duration: 0.5,
+      ease: [0.23, 1, 0.32, 1]
     }
   }
 };
 
 const Skills = () => {
   const [activeGroup, setActiveGroup] = useState(0);
-
   const navigate = useNavigate();
 
   return (
-    <section id="skills" className="relative py-32 px-6 md:px-12 max-w-7xl mx-auto overflow-hidden">
-      {/* Optimized background decoration */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[400px] h-[400px] bg-mint/5 rounded-full blur-[80px] pointer-events-none" />
+    <section id="skills" className="relative py-32 px-6 md:px-12 max-w-7xl mx-auto overflow-hidden bg-[#050505]">
+      {/* Dynamic Background */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] blur-[120px] opacity-[0.03] pointer-events-none rounded-full" style={{ backgroundColor: SKILL_GROUPS[activeGroup].accent }} />
       
       {/* Section Header */}
-      <div className="relative mb-24">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="h-[1px] w-12 bg-mint/40" />
-          <p className="font-mono text-[11px] tracking-[0.3em] uppercase text-mint font-bold">
-            04 / Engineering Stack
+      <div className="relative mb-20">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex items-center gap-4 mb-8"
+        >
+          <div className="h-px w-12" style={{ backgroundColor: SKILL_GROUPS[activeGroup].accent }} />
+          <p className="font-mono text-[11px] tracking-[0.4em] uppercase font-bold" style={{ color: SKILL_GROUPS[activeGroup].accent }}>
+            System Intelligence / 04
           </p>
-        </div>
+        </motion.div>
         
-        <h2 className="font-display font-black tracking-tighter leading-[0.85] text-white mb-8" style={{ fontSize: 'clamp(48px, 8vw, 80px)' }}>
+        <h2 className="font-display font-black tracking-tighter leading-[0.85] text-white mb-8" style={{ fontSize: 'clamp(48px, 10vw, 110px)' }}>
           TECHNICAL<br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-white/50">
-            CAPABILITY MATRIX.
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/20">
+            MATRIX.
           </span>
         </h2>
       </div>
 
-      {/* Group Navigation */}
-      <div className="flex flex-wrap gap-4 mb-12">
+      {/* Modern Category Navigation */}
+      <div className="flex flex-wrap gap-3 mb-16">
         {SKILL_GROUPS.map((group, i) => (
           <button
             key={group.label}
             onClick={() => setActiveGroup(i)}
-            className={`px-6 py-2 rounded-full font-mono text-[10px] uppercase tracking-widest border transition-all duration-300 ${
+            className={`group relative flex items-center gap-3 px-6 py-3 rounded-xl font-mono text-[10px] uppercase tracking-[0.2em] transition-all duration-500 overflow-hidden border ${
               activeGroup === i 
-              ? `bg-mint text-black border-mint` 
-              : 'border-white/10 text-zinc-500 hover:border-mint/40 hover:text-white'
+              ? 'bg-white text-black border-white' 
+              : 'bg-transparent text-zinc-500 border-white/10 hover:border-white/30 hover:text-white'
             }`}
           >
-            {group.label}
+            <span className={`relative z-10 transition-colors duration-500 ${activeGroup === i ? 'text-black' : 'group-hover:text-white'}`}>
+              {group.icon}
+            </span>
+            <span className="relative z-10 font-bold">{group.label}</span>
+            
+            {/* Status Dot */}
+            <span className="relative z-10 flex h-1.5 w-1.5 ml-1">
+              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${activeGroup === i ? 'bg-black' : ''}`} style={{ backgroundColor: activeGroup === i ? '' : group.accent }}></span>
+              <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${activeGroup === i ? 'bg-black' : ''}`} style={{ backgroundColor: activeGroup === i ? '' : group.accent }}></span>
+            </span>
+
+            {/* Hover Background Effect */}
+            {activeGroup !== i && (
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500"
+                style={{ backgroundColor: group.accent }}
+              />
+            )}
           </button>
         ))}
       </div>
 
-      {/* Optimized Bento Grid */}
-      <motion.div 
-        key={activeGroup}
-        variants={gridVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[140px]"
-      >
-        {SKILL_GROUPS[activeGroup].skills.map((skill) => {
-          let Content;
-          if (skill.proficiency === 'Expert') {
-            Content = <CoreSkillTile skill={skill} color={SKILL_GROUPS[activeGroup].color} />;
-          } else if (skill.proficiency === 'Advanced') {
-            Content = <StandardSkillTile skill={skill} color={SKILL_GROUPS[activeGroup].color} />;
-          } else {
-            Content = <MicroSkillTile skill={skill} />;
-          }
+      {/* Grid Display */}
+      <div className="relative min-h-[600px]">
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={activeGroup}
+            variants={gridVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[160px]"
+          >
+            {SKILL_GROUPS[activeGroup].skills.map((skill) => {
+              let Content;
+              if (skill.proficiency === 'Expert') {
+                Content = <CoreSkillTile skill={skill} color={SKILL_GROUPS[activeGroup].color} accent={SKILL_GROUPS[activeGroup].accent} />;
+              } else if (skill.proficiency === 'Advanced') {
+                Content = <StandardSkillTile skill={skill} accent={SKILL_GROUPS[activeGroup].accent} />;
+              } else {
+                Content = <MicroSkillTile skill={skill} accent={SKILL_GROUPS[activeGroup].accent} />;
+              }
 
-          return (
-            <motion.div 
-              key={skill.name} 
-              variants={tileVariants}
-              className={skill.proficiency === 'Expert' ? 'col-span-2 row-span-2' : 'col-span-1 row-span-1'}
-            >
-              {Content}
-            </motion.div>
-          );
-        })}
-      </motion.div>
+              return (
+                <motion.div 
+                  key={skill.name} 
+                  variants={tileVariants}
+                  className={skill.proficiency === 'Expert' ? 'col-span-2 row-span-2' : 'col-span-1 row-span-1'}
+                >
+                  {Content}
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
       {/* Footer Callout */}
-      <div id="capability-callout" className="mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
-        <div className="flex items-center gap-6">
-          <div className="flex -space-x-2">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="w-8 h-8 rounded-full border-2 border-black bg-zinc-900 flex items-center justify-center">
-                <Code2 className="w-4 h-4 text-mint" />
-              </div>
-            ))}
+      <div className="mt-32 pt-16 border-t border-white/5 flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div className="flex flex-col md:flex-row items-center gap-8">
+          <div className="relative">
+            <div className="flex -space-x-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="w-12 h-12 rounded-xl border border-white/10 bg-zinc-900 flex items-center justify-center relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent group-hover:opacity-50 transition-opacity" />
+                  <Terminal className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
+                </div>
+              ))}
+            </div>
+            <motion.div 
+              animate={{ rotate: 360 }}
+              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+              className="absolute -top-1 -right-1 w-4 h-4 rounded-full border border-dashed border-white/20" 
+            />
           </div>
-          <p className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">
-            Deep mastery in <span className="text-white">distributed systems & AI orchestration</span>.
-          </p>
+          <div className="space-y-1 text-center md:text-left">
+            <p className="text-xs font-mono text-white font-bold uppercase tracking-widest">Architectural Proficiency</p>
+            <p className="text-[11px] font-mono text-zinc-500 uppercase tracking-wider">
+              Specialized in <span className="text-white">Distributed Architectures</span> & <span className="text-white">Neural Orchestration</span>.
+            </p>
+          </div>
         </div>
         
         <button 
           onClick={() => navigate('/capability-deck')}
-          className="group flex items-center gap-3 bg-white text-black px-6 py-3 rounded-sm font-display font-bold text-xs hover:bg-mint transition-all duration-300"
+          className="group relative flex items-center gap-4 bg-white text-black px-10 py-5 rounded-xl font-display font-black text-sm hover:bg-zinc-200 transition-all duration-500"
         >
-          REQUEST FULL CAPABILITY DECK
-          <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          <Zap className="w-4 h-4 fill-current" />
+          ACCESS CAPABILITY DECK
+          <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-500" />
+          
+          {/* Subtle Glow */}
+          <div className="absolute inset-0 rounded-xl bg-white/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
         </button>
       </div>
     </section>

@@ -16,15 +16,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 const Index = () => {
   useEffect(() => {
-    // Check for hash on mount and scroll to it
-    if (window.location.hash) {
-      const id = window.location.hash.replace('#', '');
-      const el = document.getElementById(id);
-      if (el) {
-        setTimeout(() => {
-          el.scrollIntoView({ behavior: 'smooth' });
-        }, 500); // Small delay to ensure all animations/layouts are ready
-      }
+    // Force scroll to top on mount/refresh
+    window.scrollTo(0, 0);
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
     }
   }, []);
 
