@@ -120,36 +120,31 @@ const SkillTile = memo(({ skill, color, delay }: { skill: Skill; color: string; 
         </span>
       </div>
 
-      <div className="mt-auto">
-        {skill.statement && (
-          <motion.div
-            initial={false}
-            className={`text-text-secondary text-[11px] leading-relaxed mb-3 ${isExpert ? 'font-mono' : ''}`}
-            animate={{
-              opacity: 0.8,
-              y: 0
-            }}
-            whileHover={{
-              opacity: 1,
-              y: -2
-            }}
-            transition={{ duration: 0.2 }}
-            // We need to trigger this on the parent group hover.
-            // Since motion.div whileHover only works on itself,
-            // and we want the parent group/tile to trigger it,
-            // we can use CSS for the transition or a state.
-            // Actually, the prompt asked for framer-motion slide-up.
-            // I will use a CSS-based approach with framer-motion's logic
-            // by using a custom animation or just standard Tailwind transitions
-            // if the trigger is the parent.
-            // Wait, I can use a `motion.p` with a transition that responds to
-            // the group hover via a CSS variable or just style it.
-            // Let's use Tailwind's group-hover for the slide-up to keep it simple
-            // but high-end, or use a motion component that monitors the parent.
-            // Better: use a simple div with transition-all and group-hover:translate-y-[-2px]
-          />
+      <div className="mt-auto flex items-end justify-between gap-2">
+        <span className={`font-mono text-[9px] uppercase tracking-widest ${isExpert ? 'text-mint font-bold' : 'text-text-secondary/60'}`}>
+          {skill.proficiency}
+        </span>
+
+        {skill.projectLink && (
+          <a
+            href={skill.projectLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-mint/10 border border-mint/20 text-mint text-[9px] px-1.5 py-0.5 rounded-sm font-mono hover:bg-mint/20 transition-colors"
+          >
+            [ VIEW_SAMP → ]
+          </a>
         )}
       </div>
+
+      {skill.statement && (
+        <motion.div
+          className={`text-text-secondary text-[11px] leading-relaxed mt-3 ${isExpert ? 'font-mono' : ''}
+            opacity-0 translate-y-2 group-hover/tile:opacity-100 group-hover/tile:translate-y-0 transition-all duration-300 ease-out`}
+        >
+          {skill.statement}
+        </motion.div>
+      )}
     </motion.div>
   );
 });
