@@ -115,9 +115,16 @@ const LetterReveal = ({
   </span>
 );
 
-const HeroMainContent = () => {
+const HeroMainContent = ({ progress = 0 }) => {
   return (
-    <div className="flex flex-col items-center">
+    <motion.div
+      style={{
+        scale: 1 + progress * 2,
+        opacity: 1 - progress * 1.5,
+        filter: `blur(${progress * 10}px)`
+      }}
+      className="flex flex-col items-center"
+    >
       <StatusBadge />
 
       <div className="relative mb-6">
@@ -153,7 +160,7 @@ const HeroMainContent = () => {
           </div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -411,7 +418,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.7 }}
           >
-            <HeroMainContent />
+            <HeroMainContent progress={scrollProgress.current} />
           </motion.div>
         </div>
       </section>
