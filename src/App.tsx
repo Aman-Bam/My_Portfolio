@@ -7,6 +7,7 @@ import { ImageKitProvider } from "@imagekit/react";
 import Index from "./pages/Index.tsx";
 import ProjectDetail from "./pages/ProjectDetail.tsx";
 import AllProject from "./pages/AllProject.tsx";
+import CapabilityDeck from "./pages/CapabilityDeck.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { CommandPalette } from "./components/portfolio/CommandPalette.tsx";
 
@@ -31,6 +32,7 @@ const App = () => {
             <Route path="/" element={<Index />} />
             <Route path="/project/:projectId" element={<ProjectDetail />} />
             <Route path="/all-project" element={<AllProject />} />
+            <Route path="/capability-deck" element={<CapabilityDeck />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 const smoothProgress = { value: 0 };
 
 const Particles = memo(() => {
-  const count = 2500;
+  const count = 1500; // Reduced particle count for performance
   const points = useMemo(() => {
     const p = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
@@ -24,11 +24,12 @@ const Particles = memo(() => {
 
   const ref = useRef<THREE.Points>(null);
 
-  useFrame(() => {
+  useFrame((state) => {
     if (!ref.current) return;
-    ref.current.rotation.z += 0.0003;
-    // Ultra-smooth lerp for particle position
-    ref.current.position.z = THREE.MathUtils.lerp(ref.current.position.z, smoothProgress.value * 20, 0.05);
+    ref.current.rotation.z += 0.0002;
+    // Optimized position update
+    const targetZ = smoothProgress.value * 20;
+    ref.current.position.z += (targetZ - ref.current.position.z) * 0.05;
   });
 
   return (
@@ -42,12 +43,13 @@ const Particles = memo(() => {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.015}
+        size={0.012}
         color="#FF6B2B"
         transparent
-        opacity={0.25}
+        opacity={0.2}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
+        depthWrite={false} // Optimization for transparent particles
       />
     </points>
   );
@@ -58,7 +60,7 @@ const StatusBadge = memo(() => (
     initial={{ opacity: 0, y: -20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
-    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 mb-8 backdrop-blur-md"
+    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 mb-8"
   >
     <span className="relative flex h-2 w-2">
       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
@@ -71,10 +73,9 @@ const StatusBadge = memo(() => (
 ));
 
 const HeroMainContent = memo(({ springProgress }: { springProgress: any }) => {
-  // UseTransform for silky smooth DOM updates tied to the spring
-  const scale = useTransform(springProgress, [0, 1], [1, 4]);
+  const scale = useTransform(springProgress, [0, 1], [1, 3]); // Reduced max scale
   const opacity = useTransform(springProgress, [0, 0.4, 0.7], [1, 0.8, 0]);
-  const y = useTransform(springProgress, [0, 1], [0, -100]);
+  const y = useTransform(springProgress, [0, 1], [0, -50]);
 
   return (
     <motion.div
@@ -82,7 +83,8 @@ const HeroMainContent = memo(({ springProgress }: { springProgress: any }) => {
         scale,
         opacity,
         y,
-        pointerEvents: springProgress.get() > 0.5 ? "none" : "auto"
+        pointerEvents: springProgress.get() > 0.5 ? "none" : "auto",
+        willChange: "transform, opacity" // GPU hint
       }}
       className="flex flex-col items-center"
     >
@@ -118,7 +120,7 @@ const HeroMainContent = memo(({ springProgress }: { springProgress: any }) => {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 1 + i * 0.1, duration: 0.5 }}
-            className="flex items-center gap-2 py-2 px-5 bg-white/5 border border-white/10 rounded-full text-[12px] font-bold text-slate-300 backdrop-blur-sm"
+            className="flex items-center gap-2 py-2 px-5 bg-white/5 border border-white/10 rounded-full text-[12px] font-bold text-slate-300"
           >
             <span className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_12px_rgba(249,115,22,0.6)]" />
             {tech}
@@ -132,15 +134,15 @@ const HeroMainContent = memo(({ springProgress }: { springProgress: any }) => {
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dpr, setDpr] = useState(1);
+  const [isInView, setIsInView] = useState(true);
 
   useEffect(() => {
-    setDpr(Math.min(window.devicePixelRatio, 2));
+    setDpr(Math.min(window.devicePixelRatio, 1.5)); // Reduced DPR cap
   }, []);
   
-  // Spring progress for DOM elements
   const xSpring = useSpring(0, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: 80, // Softer spring for better performance
+    damping: 25,
     restDelta: 0.001
   });
 
@@ -153,11 +155,12 @@ const Hero = () => {
         trigger: containerRef.current,
         start: "top top",
         end: "bottom top",
-        scrub: 1.5,
+        scrub: 1,
         onUpdate: (self) => {
           smoothProgress.value = self.progress;
           xSpring.set(self.progress);
         },
+        onToggle: (self) => setIsInView(self.isActive),
       });
     });
     return () => ctx.revert();
@@ -175,8 +178,9 @@ const Hero = () => {
             <Canvas
               camera={{ position: [0, 0, 5], fov: 50 }}
               dpr={dpr}
+              frameloop={isInView ? "always" : "never"} // Optimization: pause loop when out of view
               gl={{ 
-                antialias: true,
+                antialias: false, // Performance win
                 alpha: true,
                 powerPreference: "high-performance"
               }}

@@ -4,6 +4,7 @@ import { Mail } from "lucide-react";
 import {
   GitHubLogoIcon as Github,
   LinkedInLogoIcon as Linkedin,
+  InstagramLogoIcon as Instagram,
 } from "@radix-ui/react-icons";
 
 const Contact = () => {
@@ -56,6 +57,7 @@ const Contact = () => {
               },
               { icon: Github, label: "github.com/Aman-Bam", href: "https://github.com/Aman-Bam" },
               { icon: Linkedin, label: "linkedin.com/in/aman-bam", href: "https://www.linkedin.com/in/aman-bam/" },
+              { icon: Instagram, label: "instagram.com/amanbam__", href: "https://www.instagram.com/amanbam__" },
             ].map(({ icon: Icon, label, href }) => (
               <a
                 key={label}

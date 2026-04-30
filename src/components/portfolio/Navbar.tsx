@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { Magnetic } from './Magnetic';
+import { InstagramLogoIcon as Instagram } from '@radix-ui/react-icons';
 
 const sections = [
   { id: 'hero', label: 'HOME' },
@@ -58,15 +59,26 @@ const Navbar = () => {
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-4">
-          <span className="flex items-center gap-2 font-mono text-[11px] text-text-secondary">
-            <motion.span
-              className="w-1.5 h-1.5 rounded-full bg-mint"
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 1.4, repeat: Infinity }}
-            />
-            AVAILABLE
-          </span>
+        <div className="hidden md:flex items-center gap-6">
+          <div className="flex items-center gap-4">
+            <a 
+              href="https://www.instagram.com/amanbam__" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-text-secondary hover:text-mint transition-colors flex items-center"
+              data-cursor="link"
+            >
+              <Instagram width={16} height={16} />
+            </a>
+            <span className="flex items-center gap-2 font-mono text-[11px] text-text-secondary">
+              <motion.span
+                className="w-1.5 h-1.5 rounded-full bg-mint"
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 1.4, repeat: Infinity }}
+              />
+              AVAILABLE
+            </span>
+          </div>
           <Magnetic>
             <motion.button
               onClick={() => scrollTo('contact')}

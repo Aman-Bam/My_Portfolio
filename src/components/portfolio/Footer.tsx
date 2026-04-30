@@ -1,5 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { GitHubLogoIcon as Github, LinkedInLogoIcon as Linkedin, InstagramLogoIcon as Instagram } from '@radix-ui/react-icons';
+import { 
+  GitHubLogoIcon as Github, 
+  LinkedInLogoIcon as Linkedin, 
+  InstagramLogoIcon as Instagram,
+  EnvelopeClosedIcon as Mail 
+} from '@radix-ui/react-icons';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Magnetic } from './Magnetic';
@@ -32,7 +37,8 @@ const Footer = () => {
           {[
             { Icon: Github, url: 'https://github.com/Aman-Bam', label: 'GitHub' },
             { Icon: Linkedin, url: 'https://www.linkedin.com/in/aman-bam/', label: 'LinkedIn' },
-            { Icon: Instagram, url: 'https://www.instagram.com/amanbam__', label: 'Instagram' }
+            { Icon: Instagram, url: 'https://www.instagram.com/amanbam__', label: 'Instagram' },
+            { Icon: Mail, url: 'mailto:amanbam604@gmail.com', label: 'Email' }
           ].map(({ Icon, url, label }, i) => (
             <Magnetic key={i}>
               <a href={url} target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-mint transition-colors" aria-label={label} data-cursor="link">

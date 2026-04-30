@@ -11,7 +11,7 @@ const IK_URL = import.meta.env.VITE_IK_URL_ENDPOINT ?? "";
 
 /** Builds an ImageKit URL with properly encoded path segments */
 const ikUrl = (path: string) =>
-  `${IK_URL}/${path.split("/").map(encodeURIComponent).join("/")}`;
+  `${IK_URL}/${path.split("/").map(encodeURIComponent).join("/")}?tr=w-800,q-80`; // Optimized image fetching
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,7 +28,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
         <div
           className="card-blob"
           style={{
-            background: `radial-gradient(circle at 30% 30%, ${accent}22 0%, transparent 70%)`,
+            background: `radial-gradient(circle at 30% 30%, ${accent}15 0%, transparent 70%)`,
           }}
         />
 
@@ -81,7 +81,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
         </div>
 
         {/* Number */}
-        <span className="card-number" style={{ color: `${accent}18` }}>
+        <span className="card-number" style={{ color: `${accent}12` }}>
           {String(projects.indexOf(project) + 1).padStart(2, "0")}
         </span>
 
@@ -131,10 +131,10 @@ const Projects = () => {
         scrollTrigger: {
           trigger: wrapper,
           pin: true,
-          scrub: 0.5,
+          scrub: 0.1, // Faster scrub response for less lag
           start: "center center",
           end: () => `+=${strip.scrollWidth}`,
-          invalidateOnRefresh: false,
+          invalidateOnRefresh: true,
         },
       });
 
@@ -188,12 +188,13 @@ const Projects = () => {
           align-items: stretch;
           padding: 2rem 3rem 4rem;
           gap: 2rem;
-          will-change: transform;
+          will-change: transform; /* GPU hint */
         }
 
         /* ── Project card ────────────────────────────── */
         .project-card-wrap {
           flex: 0 0 clamp(300px, 33vw, 420px);
+          will-change: transform;
         }
         .project-card {
           position: relative;
@@ -208,6 +209,7 @@ const Projects = () => {
           overflow: hidden;
           transition: border-color 0.35s, transform 0.35s;
           cursor: default;
+          transform: translateZ(0); /* Force GPU layer */
         }
         .project-card:hover {
           border-color: var(--accent);
@@ -380,8 +382,8 @@ const Projects = () => {
           background: rgba(255,255,255,0.15);
         }
         .view-all-btn {
-          background: rgba(0, 232, 122, 0.1);
-          border: 1px solid rgba(0, 232, 122, 0.3);
+          background: rgba(0, 232, 122, 0.05); /* Reduced opacity */
+          border: 1px solid rgba(0, 232, 122, 0.2);
           color: #00e87a;
           font-family: 'Space Mono', monospace;
           font-size: 12px;
@@ -394,7 +396,6 @@ const Projects = () => {
           align-items: center;
           gap: 1rem;
           transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-          backdrop-filter: blur(10px);
           white-space: nowrap;
         }
         .view-all-btn:hover {
