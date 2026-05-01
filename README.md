@@ -16,7 +16,7 @@ A high-fidelity, mathematically verified portfolio designed to demonstrate the i
 
 This project is engineered as a high-performance single-page application (SPA) leveraging the latest concurrent features of React 19 and the next-generation Tailwind 4 engine.
 
-### 🔬 The "God Tier" Stack
+### 🔬 Stack
 - **Core:** React 19 (Concurrent Rendering) + TypeScript (Advanced Type Engineering)
 - **Creative:** Three.js (WebGL) + GSAP (High-precision interpolation)
 - **Verification:** Playwright (End-to-End Testing Suite)
