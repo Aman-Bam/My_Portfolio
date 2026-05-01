@@ -1,7 +1,11 @@
 node_modules
 node_modules
 .env
-
+.github
+dist
+playwright-report
+test-results
+.github
 
 # Dependencies
 **/node_modules/
