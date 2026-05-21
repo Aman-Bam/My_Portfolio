@@ -1,85 +1,40 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
+import { projects } from "../data/projects";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const IK_URL = import.meta.env.VITE_IK_URL_ENDPOINT ?? "";
 
-const ikUrl = (path: string) =>
-  `${IK_URL}/${path.split("/").map(encodeURIComponent).join("/")}`;
-
-const ALL_WORKS = [
-  {
-    id: "apuni-sarkar",
-    title: "Apuni Sarkar",
-    description: "AI-powered platform simplifying access to Uttarakhand government schemes.",
-    tech: ["React 19", "Gemini API", "Tailwind CSS"],
-    badge: "🥇 HACKATHON WINNER",
-    image: "Project_img/Apuni_Sarkar.png",
-    github: "https://github.com/Aman-Bam/Apuni_Sarkar",
-    live: "https://apuni-sarkar-citizen-services-done.vercel.app/",
-    featured: true,
-  },
-  {
-    id: "employment-system",
-    title: "Employee Management System (RBAC Dashboard)",
-    description: "Advanced role-based dashboard for seamless employee management with precise access control.",
-    tech: ["TypeScript", "Next.js 14", "Tailwind CSS", "Shadcn UI"],
-    image: "Project_img/EmploymentManagementSystem.png",
-    github: "https://github.com/Aman-Bam/Employee-Management-System",
-    live: "https://employe-mangement-using-rbac-dashboard.vercel.app/",
-    featured: true,
-  },
-  {
-    id: "banking-backend",
-    title: "Banking System Backend",
-    description: "Pure backend REST API for account management and transactions.",
-    tech: ["Node.js", "Express.js", "MongoDB"],
-    type: "Backend API",
-    image: "Project_img/bankingsystem.png",
-    github: "https://github.com/Aman-Bam/Banking-System",
-    live: "",
-    featured: true,
-  },
-  {
-    id: "lead-extension",
-    title: "Lead Extension",
-    description: "Browser-based lead capture tool for extracting prospect data.",
-    tech: ["Chrome Extension APIs", "JavaScript"],
-    type: "Chrome Extension",
-    image: "Project_img/Lead_Extension.png",
-    github: "https://github.com/Aman-Bam/lead-Extension",
-    live: "",
-    featured: false,
-  },
-  {
-    id: "dentocare",
-    title: "DENTOCARE",
-    description: "Professional dental clinic management system focusing on appointment scheduling and patient record tracking.",
-    tech: ["React", "Tailwind CSS", "Node.js", "MongoDB"],
-    image: "Project_img/Dentocare.png",
-    github: "https://github.com/Aman-Bam/Dentocare1",
-    live: "",
-    featured: false,
-  },
-];
+/** Builds an ImageKit URL with properly encoded path segments. 
+ * Handles both relative paths and absolute URLs. 
+ */
+const ikUrl = (path: string) => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  
+  const baseUrl = IK_URL.replace(/\/$/, "");
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  
+  if (!baseUrl) return `/${cleanPath}`;
+  
+  return `${baseUrl}/${cleanPath.split("/").map(encodeURIComponent).join("/")}`;
+};
 
 const AllProject = () => {
   const navigate = useNavigate();
-  const featuredContainerRef = useRef<HTMLDivElement>(null);
-  const archiveContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     // Cinematic entrance for the featured projects
     const featuredSections = gsap.utils.toArray<HTMLElement>(".featured-project");
 
-    featuredSections.forEach((section, index) => {
+    featuredSections.forEach((section) => {
       gsap.fromTo(section,
         { opacity: 0, y: 50 },
         {
@@ -115,8 +70,8 @@ const AllProject = () => {
     });
   }, []);
 
-  const featuredProjects = ALL_WORKS.filter(p => p.featured);
-  const archiveProjects = ALL_WORKS.filter(p => !p.featured);
+  const featuredProjects = projects.filter(p => p.featured);
+  const archiveProjects = projects.filter(p => !p.featured);
 
   return (
     <div className="bg-black text-white min-h-screen overflow-x-hidden">
@@ -132,7 +87,7 @@ const AllProject = () => {
         </header>
 
         <div className="max-w-7xl mx-auto w-full space-y-40">
-          {featuredProjects.map((project, index) => (
+          {featuredProjects.map((project) => (
             <div
               key={project.id}
               className="featured-project relative grid grid-cols-1 md:grid-cols-12 gap-8 items-center group"

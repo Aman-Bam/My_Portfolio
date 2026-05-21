@@ -10,6 +10,7 @@ export interface Project {
   live?: string;
   color: string;
   image: string;
+  featured?: boolean;
   layoutSize: 'hero' | 'wide' | 'standard';
 
   // Case Study Extensions
@@ -37,6 +38,7 @@ export const projects: Project[] = [
     live: "https://apuni-sarkar-citizen-services-done.vercel.app/",
     github: "https://github.com/Aman-Bam/Apuni_Sarkar",
     image: "Project_img/Apuni_Sarkar.png",
+    featured: true,
     layoutSize: 'hero',
     caseStudy: {
       challenge: "Government documentation is often fragmented, dense, and inaccessible to the average citizen, creating a massive barrier to accessing essential welfare schemes.",
@@ -70,6 +72,7 @@ export const projects: Project[] = [
     github: "https://github.com/Aman-Bam/Employee-Management-System",
     live: "https://employe-mangement-using-rbac-dashboard.vercel.app/",
     image: "Project_img/EmploymentManagementSystem.png",
+    featured: true,
     layoutSize: 'wide',
     caseStudy: {
       challenge: "Enterprise internal tools often suffer from fragmented access control and poor visibility into employee performance. The client needed a system that could handle granular permissions while providing real-time task tracking without data collisions.",
@@ -107,6 +110,7 @@ export const projects: Project[] = [
     color: "#7EB8F7",
     github: "https://github.com/Aman-Bam/Banking-System",
     image: "Project_img/bankingsystem.png",
+    featured: true,
     layoutSize: 'standard',
     caseStudy: {
       challenge: "Financial systems require absolute precision. Handling balance transfers between accounts in a distributed environment is prone to 'double-spending' errors if not handled with extreme care.",
@@ -138,6 +142,7 @@ export const projects: Project[] = [
     color: "#B97CF7",
     github: "https://github.com/Aman-Bam/lead-Extension",
     image: "Project_img/Lead_Extension.png",
+    featured: false,
     layoutSize: 'standard',
     caseStudy: {
       challenge: "Extracting structured data from unstructured web pages (DOMs) is challenging because every website has a different HTML structure.",
@@ -170,6 +175,7 @@ export const projects: Project[] = [
     github: "https://github.com/Aman-Bam/React-Meal-Explorer",
     live:"https://extraordinary-moxie-2517bf.netlify.app/",
     image: "Project_img/Meal-Explorer.png",
+    featured: false,
     layoutSize: 'standard',
     caseStudy: {
       challenge: "External APIs often have inconsistent response times and varying data structures, leading to 'jank' and layout shifts during loading.",
@@ -201,6 +207,7 @@ export const projects: Project[] = [
     color: "#7EB8F7",
     github: "https://github.com/Aman-Bam/Dentocare1",
     image: "Project_img/Dentocare.png",
+    featured: false,
     layoutSize: 'standard',
     caseStudy: {
       challenge: "Dental clinics often struggle with fragmented paper records and inefficient appointment scheduling, leading to overbooking or missed slots and poor patient follow-up.",

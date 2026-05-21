@@ -8,9 +8,20 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 const IK_URL = import.meta.env.VITE_IK_URL_ENDPOINT ?? "";
 
-/** Builds an ImageKit URL with properly encoded path segments */
-const ikUrl = (path: string) =>
-  `${IK_URL}/${path.split("/").map(encodeURIComponent).join("/")}`;
+/** Builds an ImageKit URL with properly encoded path segments. 
+ * Handles both relative paths and absolute URLs. 
+ */
+const ikUrl = (path: string) => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  
+  const baseUrl = IK_URL.replace(/\/$/, "");
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  
+  if (!baseUrl) return `/${cleanPath}`;
+  
+  return `${baseUrl}/${cleanPath.split("/").map(encodeURIComponent).join("/")}`;
+};
 
 const ProjectDetail = () => {
   const { projectId } = useParams();

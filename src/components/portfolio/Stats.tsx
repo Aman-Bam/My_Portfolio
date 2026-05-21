@@ -8,8 +8,8 @@ gsap.registerPlugin(ScrollTrigger);
 const stats = [
   { value: 1, display: '01', label: 'HACKATHONS WON' },
   { value: null, display: '3rd', label: 'RANK ACHIEVED' },
-  { value: 3, display: '3+', label: 'REAL PRODUCTS SHIPPED' },
-  { value: null, display: '∞', label: 'CURIOSITY' },
+  { value: 9, display: '9+', label: 'REAL PRODUCTS SHIPPED' },
+  // { value: null, display: '∞', label: 'CURIOSITY' },
 ];
 const CountUp = ({ target, display, label }: { target: number | null; display: string; label: string }) => {
   const [val, setVal] = useState(target !== null ? '0' : '');

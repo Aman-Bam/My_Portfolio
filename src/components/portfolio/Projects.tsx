@@ -10,9 +10,22 @@ import "./Projects.css";
 
 const IK_URL = import.meta.env.VITE_IK_URL_ENDPOINT ?? "";
 
-/** Builds an ImageKit URL with properly encoded path segments */
-const ikUrl = (path: string) =>
-  `${IK_URL}/${path.split("/").map(encodeURIComponent).join("/")}?tr=w-800,q-80`; // Optimized image fetching
+/** Builds an ImageKit URL with properly encoded path segments. 
+ * Handles both relative paths and absolute URLs. 
+ */
+const ikUrl = (path: string) => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  
+  const baseUrl = IK_URL.replace(/\/$/, "");
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  
+  const finalPath = `${cleanPath.split("/").map(encodeURIComponent).join("/")}?tr=w-800,q-80`;
+  
+  if (!baseUrl) return `/${finalPath}`;
+  
+  return `${baseUrl}/${finalPath}`;
+};
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -413,7 +426,7 @@ const Projects = () => {
         }
       `}</style>
 
-      {/* Static header ABOVE the pinned zone */}
+      {/* Section header ABOVE the pinned zone */}
       <div className="projects-header">
         <p className="projects-label">003 — SELECTED WORK</p>
         <h2 className="projects-title">
