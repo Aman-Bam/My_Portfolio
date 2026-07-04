@@ -85,22 +85,22 @@ const About = () => {
                 {terminalRows.map(([key, val], i) => (
                   <motion.div
                     key={key}
-                    className="flex justify-between font-mono text-[13px]"
+                    className="flex justify-between font-mono text-[13px] gap-4"
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.08, duration: 0.4 }}
                   >
-                    <span className="text-text-secondary">{key}</span>
-                    <span className="text-foreground flex items-center gap-1.5">
-                      {val === '● Open to Work' ? (
+                    <span className="text-text-secondary shrink-0">{key}</span>
+                    <span className="text-foreground flex items-center gap-1.5 text-right">
+                      {key === 'STATUS' ? (
                         <>
                           <motion.span
-                            className="w-1.5 h-1.5 rounded-full bg-mint inline-block"
+                            className="w-1.5 h-1.5 rounded-full bg-mint inline-block shrink-0"
                             animate={{ opacity: [0.4, 1, 0.4] }}
                             transition={{ duration: 1.4, repeat: Infinity }}
                           />
-                          Open to Work
+                          {val}
                         </>
                       ) : val}
                     </span>

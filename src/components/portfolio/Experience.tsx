@@ -56,7 +56,7 @@ const Experience = () => {
               className="relative"
             >
               <span className="absolute -left-10 md:-left-16 top-1 font-mono text-sm text-mint font-bold">{ev.year}</span>
-              <div className="absolute -left-[2.85rem] md:-left-[4.85rem] top-2 w-2 h-2 rounded-full bg-mint/60 border-2 border-background" />
+              <div className="absolute -left-[2.85rem] md:-left-[4.375rem] top-2 w-2 h-2 rounded-full bg-mint/60 border-2 border-background" />
               <h3 className="font-display font-semibold text-lg text-foreground mb-1">{ev.title}</h3>
               <p className="text-text-secondary text-sm leading-relaxed">{ev.desc}</p>
             </motion.div>
