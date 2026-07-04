@@ -735,7 +735,7 @@ export const VideoPortfolio = () => {
             >
               {activeVideo.videoUrl.includes('instagram.com') ? (
                 <iframe
-                  src={`https://www.instagram.com/reel/${activeVideo.videoUrl.match(/\/reel\/([a-zA-Z0-9_-]+)/)?.[1] || ''}/embed/`}
+                  src={`https://www.instagram.com/reel/${activeVideo.videoUrl.match(/\/(reel|p|tv)\/([a-zA-Z0-9_-]+)/)?.[2] || ''}/embed/`}
                   className="w-full h-full border-none rounded-3xl"
                   allowFullScreen
                   scrolling="no"
