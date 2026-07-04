@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ArrowLeft, 
-  Play, 
-  X, 
-  Sparkles, 
-  Layers, 
-  Video, 
+import {
+  ArrowLeft,
+  Play,
+  X,
+  Sparkles,
+  Layers,
+  Video,
   Flame,
   ArrowRight,
   Tv,
@@ -23,25 +23,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const IK_URL = import.meta.env.VITE_IK_URL_ENDPOINT ?? "";
-
-/** Builds an ImageKit URL with properly encoded path segments. 
- * Handles both relative paths and absolute URLs. 
- */
-const ikUrl = (path: string) => {
-  if (!path) return "";
-  if (path.startsWith("http")) return path;
-  
-  const baseUrl = IK_URL.replace(/\/$/, "");
-  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
-  
-  const finalPath = `${cleanPath.split("/").map(encodeURIComponent).join("/")}?tr=w-800,q-80`;
-  
-  if (!baseUrl) return `/${finalPath}`;
-  
-  return `${baseUrl}/${finalPath}`;
-};
 
 interface VideoWork {
   id: string;
@@ -75,249 +56,47 @@ const VIDEO_WORKS: VideoWork[] = [
   },
   {
     id: "neon-dance",
-    title: "Viral Promo Reel",
+    title: "Cyberpunk Dance Sequence",
     category: "commercial",
     views: "4.8M",
     likes: "420K",
     retention: "92%",
-    videoUrl: "https://www.instagram.com/reel/DaVZ6VTvQbY/?igsh=cDh2bzU3ZGFoeWw2",
+    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-man-dancing-under-neon-lights-41865-large.mp4",
     previewUrl: "https://assets.mixkit.co/videos/preview/mixkit-man-dancing-under-neon-lights-41865-large.mp4",
     thumbnail: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&auto=format&fit=crop&q=80",
-    client: "Brand Campaign",
-    description: "High-energy vertical promo featuring rapid match cuts, speed ramp curves, and detailed color grade adjustments designed to maximize watch time.",
-    tags: ["Match Cuts", "Color Grading", "Film Emulation"]
+    client: "NeonFlux Apparel",
+    description: "High-energy commercial edit featuring speed ramping, color grading, and match cuts. Boosted click-through rate for the apparel drop by 34%.",
+    tags: ["Match Cuts", "DaVinci Resolve", "Color Grading"]
   },
   {
     id: "audio-equalizer",
-    title: "Cinematic Sound Design",
+    title: "Macro Audio Gear Launch",
     category: "short-form",
     views: "1.1M",
     likes: "85K",
     retention: "84%",
-    videoUrl: "https://www.instagram.com/reel/DZzpz0vPXN7/?igsh=ZzN1N2U4ZXE4cWdi",
+    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-hands-adjusting-sound-on-an-equalizer-41869-large.mp4",
     previewUrl: "https://assets.mixkit.co/videos/preview/mixkit-hands-adjusting-sound-on-an-equalizer-41869-large.mp4",
     thumbnail: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80",
-    client: "Audio Showcase",
-    description: "Close-up macro shots combined with punchy sound effects and fast pacing to build audio-visual coherence.",
-    tags: ["Sound FX", "Macro Edit", "Pacing"]
+    client: "AcousticLab",
+    description: "Close-up macro shots combined with punchy sound effects to create a highly satisfying, loopable short-form video that went viral.",
+    tags: ["Sound FX", "Macro Edit", "Premiere Pro"]
   },
   {
     id: "dj-vibe",
-    title: "Festival Energy Cut",
+    title: "Dynamic Concert Aftermovie",
     category: "long-form",
     views: "3.2M",
     likes: "290K",
     retention: "89%",
-    videoUrl: "https://www.instagram.com/reel/DZ-b5KRJMEw/?igsh=bXU1dDM2Yng1ODB0",
+    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cyberpunk-style-dj-playing-music-41864-large.mp4",
     previewUrl: "https://assets.mixkit.co/videos/preview/mixkit-cyberpunk-style-dj-playing-music-41864-large.mp4",
     thumbnail: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80",
-    client: "Live Event",
-    description: "Fast-paced aftermovie cut that builds concert hype. Utilizes dynamic masks and lighting transition frames.",
+    client: "SoundBase Fest",
+    description: "A fast-paced aftermovie capturing concert crowds and transitions. Utilized dynamic masks and lighting effects to match the track's rhythm.",
     tags: ["Transitions", "Vaporwave", "Masking"]
-  },
-  {
-    id: "creative-reel-5",
-    title: "Aesthetic Movement Edit",
-    category: "short-form",
-    views: "2.7M",
-    likes: "195K",
-    retention: "88%",
-    videoUrl: "https://www.instagram.com/reel/DZq_QxFPd8P/?igsh=MWx0NDljbXR5czUwaQ==",
-    previewUrl: "https://assets.mixkit.co/videos/preview/mixkit-neon-light-from-a-retro-arcade-game-41870-large.mp4",
-    thumbnail: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=800&auto=format&fit=crop&q=80",
-    client: "Style Reel",
-    description: "Short-form aesthetic edit focusing on color matching, visual rhythm, and clean frame changes.",
-    tags: ["Aesthetic Grade", "Sound Design", "Frame Holds"]
   }
 ];
-
-const VideoCard = ({ 
-  video, 
-  onPlay 
-}: { 
-  video: VideoWork; 
-  onPlay: (video: VideoWork) => void; 
-}) => {
-  const [hovered, setHovered] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const getCategoryStyles = (category: string) => {
-    switch (category) {
-      case 'vfx':
-        return {
-          accent: '#ec4899',
-          textClass: 'text-pink-400',
-          borderHover: 'hover:border-pink-500/30',
-          glowClass: 'via-pink-500/[0.04]',
-          buttonBg: 'group-hover:bg-pink-500 group-hover:border-pink-500',
-          timelineV1: 'bg-pink-500/30 border-pink-500/40',
-          waveform: 'bg-pink-500/45'
-        };
-      case 'commercial':
-        return {
-          accent: '#0ea5e9',
-          textClass: 'text-sky-400',
-          borderHover: 'hover:border-sky-500/30',
-          glowClass: 'via-sky-500/[0.04]',
-          buttonBg: 'group-hover:bg-sky-500 group-hover:border-sky-500',
-          timelineV1: 'bg-sky-500/30 border-sky-500/40',
-          waveform: 'bg-sky-500/45'
-        };
-      case 'long-form':
-        return {
-          accent: '#10b981',
-          textClass: 'text-emerald-400',
-          borderHover: 'hover:border-emerald-500/30',
-          glowClass: 'via-emerald-500/[0.04]',
-          buttonBg: 'group-hover:bg-emerald-500 group-hover:border-emerald-500',
-          timelineV1: 'bg-emerald-500/30 border-emerald-500/40',
-          waveform: 'bg-emerald-500/45'
-        };
-      case 'short-form':
-      default:
-        return {
-          accent: '#f97316',
-          textClass: 'text-orange-400',
-          borderHover: 'hover:border-orange-500/30',
-          glowClass: 'via-orange-500/[0.04]',
-          buttonBg: 'group-hover:bg-orange-500 group-hover:border-orange-500',
-          timelineV1: 'bg-orange-500/30 border-orange-500/40',
-          waveform: 'bg-orange-500/45'
-        };
-    }
-  };
-
-  const style = getCategoryStyles(video.category);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      if (hovered) {
-        videoRef.current.currentTime = 0;
-        videoRef.current.play().catch(() => {});
-      } else {
-        videoRef.current.pause();
-      }
-    }
-  }, [hovered]);
-
-  return (
-    <motion.div
-      layout
-      whileHover={{ y: -8 }}
-      className={`animated-card group relative bg-white/[0.02] border border-white/5 ${style.borderHover} rounded-[2rem] overflow-hidden aspect-[9/16] cursor-pointer flex flex-col justify-between p-6 select-none shadow-2xl transition-all duration-500`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onClick={() => onPlay(video)}
-      data-cursor="link"
-    >
-      {/* Background Glow */}
-      <div className={`absolute inset-0 bg-gradient-to-b from-transparent ${style.glowClass} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none`} />
-
-      {/* Cover Image */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <img
-          src={ikUrl(video.thumbnail)}
-          alt={video.title}
-          className="w-full h-full object-cover grayscale opacity-35 group-hover:opacity-0 group-hover:scale-105 transition-all duration-700"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/40 to-black z-10" />
-      </div>
-
-      {/* Hover Looping Video Preview */}
-      <div className="absolute inset-0 z-0 overflow-hidden opacity-0 group-hover:opacity-85 transition-opacity duration-500">
-        <video
-          ref={videoRef}
-          src={video.previewUrl}
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black z-10" />
-      </div>
-
-      {/* Dashboard HUD Top Stats Row */}
-      <div className="relative z-20 flex justify-between items-center">
-        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/60 border border-white/10 ${style.textClass} font-mono text-[9px] font-black uppercase tracking-widest backdrop-blur-md`}>
-          <Instagram size={10} />
-          <span>{video.views} Views</span>
-        </div>
-
-        <div className={`w-9 h-9 rounded-xl bg-black/60 ${style.buttonBg} text-white group-hover:text-black flex items-center justify-center border border-white/10 transition-all duration-300 shadow-xl`}>
-          <Play size={12} className="fill-current ml-0.5" />
-        </div>
-      </div>
-
-      {/* Dashboard Bottom HUD Panel */}
-      <div className="relative z-20 space-y-4">
-        <div className="space-y-1.5">
-          <span className={`text-[9px] font-mono text-zinc-500 uppercase tracking-widest font-black block ${style.textClass} transition-colors`}>
-            {video.client} // {video.retention} Retention
-          </span>
-          <h3 className="text-2xl font-black italic uppercase leading-[0.9] tracking-tight text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-zinc-500 transition-colors">
-            {video.title}
-          </h3>
-        </div>
-
-        <p className="text-zinc-500 text-xs leading-relaxed line-clamp-2">
-          {video.description}
-        </p>
-
-        {/* Mini Video Editing Timeline Track HUD */}
-        <div className="pt-4 border-t border-white/5 space-y-2 mt-2">
-          <div className="flex items-center justify-between text-[8px] font-mono text-zinc-600">
-            <span>TIMELINE PREVIEW</span>
-            <span className={`${style.textClass} group-hover:animate-pulse font-bold`}>00:00:15:00</span>
-          </div>
-          
-          <div className="space-y-1 font-mono text-[7px]">
-            {/* Video Track V1 */}
-            <div className="flex items-center gap-1.5">
-              <span className="text-zinc-600 w-3">V1</span>
-              <div className="flex-1 h-3 bg-zinc-950/80 rounded border border-white/5 relative overflow-hidden flex gap-0.5 p-0.5">
-                <div className={`h-full rounded ${style.timelineV1} flex-1`} />
-                <div className="h-full rounded bg-white/10 w-1/3" />
-                <div className={`h-full rounded ${style.timelineV1} w-1/4`} />
-              </div>
-            </div>
-
-            {/* Audio Track A1 */}
-            <div className="flex items-center gap-1.5">
-              <span className="text-zinc-600 w-3">A1</span>
-              <div className="flex-1 h-3 bg-zinc-950/80 rounded border border-white/5 relative overflow-hidden flex items-center px-1">
-                {/* Waveform Visualization Bars */}
-                <div className="flex items-end gap-[1px] h-full py-0.5 w-full">
-                  {[...Array(24)].map((_, i) => (
-                    <div 
-                      key={i} 
-                      className={`w-[2px] ${style.waveform} rounded-full transition-all duration-300`}
-                      style={{ 
-                        height: `calc(20% + ${Math.abs(Math.sin(i * 0.4)) * 70}%)`,
-                        animation: hovered ? 'dancingWaveform 0.6s ease-in-out infinite alternate' : 'none',
-                        animationDelay: `${i * 0.02}s`
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap gap-1.5 pt-1">
-          {video.tags.map((t) => (
-            <span
-              key={t}
-              className="text-[8px] font-mono text-zinc-400 bg-white/5 px-2 py-1 rounded border border-white/5 uppercase font-bold"
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-      </div>
-    </motion.div>
-  );
-};
 
 export const VideoPortfolio = () => {
   const navigate = useNavigate();
@@ -325,6 +104,8 @@ export const VideoPortfolio = () => {
   const [activeVideo, setActiveVideo] = useState<VideoWork | null>(null);
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isSliding, setIsSliding] = useState(false);
+
+  const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});
   const sliderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -376,18 +157,24 @@ export const VideoPortfolio = () => {
     handleMove(e.clientX);
   };
 
-  const filteredWorks = filter === 'all' 
-    ? VIDEO_WORKS 
+  const handleHover = (id: string, isHovered: boolean) => {
+    const videoEl = videoRefs.current[id];
+    if (videoEl) {
+      if (isHovered) {
+        videoEl.currentTime = 0;
+        videoEl.play().catch(() => { });
+      } else {
+        videoEl.pause();
+      }
+    }
+  };
+
+  const filteredWorks = filter === 'all'
+    ? VIDEO_WORKS
     : VIDEO_WORKS.filter(w => w.category === filter);
 
   return (
     <div className="bg-[#050505] text-[#ECE9E0] min-h-screen pb-40 overflow-x-hidden selection:bg-pink-500 selection:text-white">
-      <style>{`
-        @keyframes dancingWaveform {
-          0% { height: 20%; }
-          100% { height: 95%; }
-        }
-      `}</style>
       {/* Cinematic Background Grid & Neon Orbs */}
       <div className="fixed inset-0 z-0 technical-grid opacity-30 pointer-events-none" />
       <div className="fixed top-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-pink-500/5 blur-[140px] pointer-events-none z-0" />
@@ -395,7 +182,7 @@ export const VideoPortfolio = () => {
 
       {/* Floating Top Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 md:px-12 py-6 flex justify-between items-center bg-[#050505]/40 backdrop-blur-md border-b border-white/5">
-        <button 
+        <button
           onClick={() => navigate('/')}
           className="group flex items-center gap-3 text-zinc-500 hover:text-white transition-colors"
           data-cursor="link"
@@ -403,25 +190,12 @@ export const VideoPortfolio = () => {
           <ArrowLeft size={16} className="group-hover:-translate-x-1.5 transition-transform" />
           <span className="font-mono text-[10px] uppercase tracking-[0.2em] font-bold">Return to Main</span>
         </button>
-
-        <div className="flex items-center gap-3">
-          <a
-            href="https://www.instagram.com/amanifx__/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 hover:bg-pink-500/10 border border-white/10 hover:border-pink-500/30 rounded-full text-zinc-400 hover:text-pink-400 transition-all font-mono text-[9px] uppercase tracking-widest font-black"
-            data-cursor="link"
-          >
-            <Instagram size={11} /> @amanifx__
-          </a>
-
-          <div className="flex items-center gap-2 px-3.5 py-1.5 bg-pink-500/5 border border-pink-500/20 rounded-full">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
-            </span>
-            <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-pink-400 font-black">PRO EDIT ENGINE</span>
-          </div>
+        <div className="flex items-center gap-2 px-3.5 py-1.5 bg-pink-500/5 border border-pink-500/20 rounded-full">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-pink-500"></span>
+          </span>
+          <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-pink-400 font-black">PRO EDIT ENGINE</span>
         </div>
       </nav>
 
@@ -444,7 +218,7 @@ export const VideoPortfolio = () => {
           </h1>
 
           <p className="text-zinc-400 text-lg md:text-2xl leading-relaxed font-medium max-w-3xl mx-auto">
-            Short-form is won in the first 3 seconds. I engineer fast cuts, speed ramps, and high-converting hooks that drove <span className="text-white font-bold underline decoration-pink-500 decoration-2">20M+ views</span> on Instagram.
+            Short-form is won in the first 3 seconds. I engineer fast cuts, speed ramps, and high-converting hooks that drove <span className="text-white font-bold underline decoration-pink-500 decoration-2">10M+ views</span> on Instagram.
           </p>
 
           <div className="flex flex-wrap justify-center gap-3 pt-4">
@@ -463,8 +237,8 @@ export const VideoPortfolio = () => {
           {[
             { value: "20M+", label: "INSTAGRAM VIEWS", detail: "Across viral reels" },
             { value: "92%", label: "RETENTION HOOK", detail: "First 3-second hold" },
-            { value: "5M+", label: "ENGAGEMENT CLICKS", detail: "Likes & shares" },
-            { value: "48HRS", label: "DELIVERY CYCLE", detail: "Swift turnarounds" }
+            { value: "800K+", label: "ENGAGEMENT", detail: "Likes & shares" },
+            { value: "24HRS", label: "DELIVERY CYCLE", detail: "Swift turnarounds" }
           ].map((stat, i) => (
             <div key={i} className="text-center md:text-left space-y-1.5 border-l border-white/5 pl-6 first:border-none">
               <h3 className="text-4xl md:text-6xl font-black italic tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-white to-zinc-500 font-mono leading-none">
@@ -491,7 +265,7 @@ export const VideoPortfolio = () => {
           </p>
         </div>
 
-        <div 
+        <div
           ref={sliderRef}
           className="relative aspect-video w-full rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl cursor-ew-resize select-none"
           onMouseMove={handleMouseMove}
@@ -503,8 +277,8 @@ export const VideoPortfolio = () => {
           onMouseLeave={() => setIsSliding(false)}
         >
           {/* After Image (Full Color Grade - Base Layer) */}
-          <img 
-            src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=1200&auto=format&fit=crop&q=80" 
+          <img
+            src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=1200&auto=format&fit=crop&q=80"
             alt="Graded Footage"
             className="absolute inset-0 w-full h-full object-cover pointer-events-none"
           />
@@ -513,12 +287,12 @@ export const VideoPortfolio = () => {
           </div>
 
           {/* Before Image (Raw Log Footage - Clipped Overlay) */}
-          <div 
+          <div
             className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden"
             style={{ width: `${sliderPosition}%` }}
           >
-            <img 
-              src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=1200&auto=format&fit=crop&q=80" 
+            <img
+              src="https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=1200&auto=format&fit=crop&q=80"
               alt="Raw LOG"
               className="absolute inset-0 w-full h-full object-cover filter saturate-[0.15] contrast-[0.6] brightness-[1.25] sepia-[0.15]"
               style={{ width: sliderRef.current?.offsetWidth || '100%' }}
@@ -529,7 +303,7 @@ export const VideoPortfolio = () => {
           </div>
 
           {/* Draggable Slider Bar */}
-          <div 
+          <div
             className="absolute top-0 bottom-0 w-[2px] bg-white z-30 pointer-events-none"
             style={{ left: `${sliderPosition}%` }}
           >
@@ -562,11 +336,10 @@ export const VideoPortfolio = () => {
               <button
                 key={tab.id}
                 onClick={() => setFilter(tab.id as any)}
-                className={`px-5 py-2.5 rounded-xl font-mono text-[10px] uppercase tracking-wider transition-all duration-500 font-bold border ${
-                  filter === tab.id 
-                    ? 'bg-pink-500 text-black border-pink-500 shadow-[0_0_20px_rgba(236,72,153,0.3)]' 
-                    : 'bg-transparent text-zinc-500 border-white/10 hover:border-white/30 hover:text-white'
-                }`}
+                className={`px-5 py-2.5 rounded-xl font-mono text-[10px] uppercase tracking-wider transition-all duration-500 font-bold border ${filter === tab.id
+                  ? 'bg-pink-500 text-black border-pink-500 shadow-[0_0_20px_rgba(236,72,153,0.3)]'
+                  : 'bg-transparent text-zinc-500 border-white/10 hover:border-white/30 hover:text-white'
+                  }`}
               >
                 {tab.label}
               </button>
@@ -578,11 +351,83 @@ export const VideoPortfolio = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <AnimatePresence mode="popLayout">
             {filteredWorks.map((video) => (
-              <VideoCard 
-                key={video.id} 
-                video={video} 
-                onPlay={setActiveVideo} 
-              />
+              <motion.div
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+                key={video.id}
+                className="animated-card group relative bg-white/[0.02] border border-white/5 hover:border-pink-500/30 rounded-[2rem] overflow-hidden aspect-[9/16] cursor-pointer flex flex-col justify-between p-6 select-none shadow-2xl transition-colors duration-500"
+                onMouseEnter={() => handleHover(video.id, true)}
+                onMouseLeave={() => handleHover(video.id, false)}
+                onClick={() => setActiveVideo(video)}
+              >
+                {/* Background Glow */}
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-pink-500/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+
+                {/* Cover Image */}
+                <div className="absolute inset-0 z-0 overflow-hidden">
+                  <img
+                    src={video.thumbnail}
+                    alt={video.title}
+                    className="w-full h-full object-cover grayscale opacity-30 group-hover:opacity-0 group-hover:scale-105 transition-all duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/40 to-black z-10" />
+                </div>
+
+                {/* Hover Looping Video Preview */}
+                <div className="absolute inset-0 z-0 overflow-hidden opacity-0 group-hover:opacity-85 transition-opacity duration-500">
+                  <video
+                    ref={el => videoRefs.current[video.id] = el}
+                    src={video.previewUrl}
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black z-10" />
+                </div>
+
+                {/* Dashboard HUD Top Stats Row */}
+                <div className="relative z-20 flex justify-between items-center">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/60 border border-white/10 text-pink-400 font-mono text-[9px] font-black uppercase tracking-widest backdrop-blur-md">
+                    <Instagram size={10} />
+                    <span>{video.views} Views</span>
+                  </div>
+
+                  <div className="w-9 h-9 rounded-xl bg-black/60 group-hover:bg-pink-500 text-white group-hover:text-black flex items-center justify-center border border-white/10 group-hover:border-pink-500 transition-all duration-300 shadow-xl">
+                    <Play size={12} className="fill-current ml-0.5" />
+                  </div>
+                </div>
+
+                {/* Dashboard Bottom HUD Panel */}
+                <div className="relative z-20 space-y-4">
+                  <div className="space-y-1.5">
+                    <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest font-black block group-hover:text-pink-400 transition-colors">
+                      {video.client} // {video.retention} Retention
+                    </span>
+                    <h3 className="text-2xl font-black italic uppercase leading-[0.9] tracking-tight text-white group-hover:text-pink-500 transition-colors">
+                      {video.title}
+                    </h3>
+                  </div>
+
+                  <p className="text-zinc-500 text-xs leading-relaxed line-clamp-2">
+                    {video.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {video.tags.map((t) => (
+                      <span
+                        key={t}
+                        className="text-[8px] font-mono text-zinc-400 bg-white/5 px-2 py-1 rounded border border-white/5 uppercase font-bold"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
             ))}
           </AnimatePresence>
         </div>
@@ -645,20 +490,20 @@ export const VideoPortfolio = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { 
-              step: "01", 
-              name: "Audio Stems Mapping", 
-              desc: "Isolating dialogue, adding heavy transient hits, sound effects, and syncing them to a rhythm track before placing a single visual cut." 
+            {
+              step: "01",
+              name: "Audio Stems Mapping",
+              desc: "Isolating dialogue, adding heavy transient hits, sound effects, and syncing them to a rhythm track before placing a single visual cut."
             },
-            { 
-              step: "02", 
-              name: "Pacing & Speed Ramps", 
-              desc: "Applying asymmetric speed curves to bridge actions. Fast movements keep eyes tracing, slow holds emphasize key visual cues." 
+            {
+              step: "02",
+              name: "Pacing & Speed Ramps",
+              desc: "Applying asymmetric speed curves to bridge actions. Fast movements keep eyes tracing, slow holds emphasize key visual cues."
             },
-            { 
-              step: "03", 
-              name: "Color Timing & VFX Glows", 
-              desc: "Color-grading with custom LUT profiles and adding neon asset tracking layers to make videos look like studio-budget commercial shorts." 
+            {
+              step: "03",
+              name: "Color Timing & VFX Glows",
+              desc: "Color-grading with custom LUT profiles and adding neon asset tracking layers to make videos look like studio-budget commercial shorts."
             }
           ].map((item, i) => (
             <div key={i} className="p-8 bg-white/[0.01] border border-white/5 rounded-[2rem] relative overflow-hidden group hover:border-pink-500/20 transition-colors duration-500">
@@ -687,21 +532,13 @@ export const VideoPortfolio = () => {
             href="https://wa.me/919259269317"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-8 py-5 bg-pink-500 text-black font-mono font-black text-xs uppercase tracking-widest rounded-xl hover:scale-105 transition-transform flex items-center gap-2 shadow-[0_0_30px_rgba(236,72,153,0.3)] w-full sm:w-auto justify-center"
+            className="px-10 py-5 bg-pink-500 text-black font-mono font-black text-xs uppercase tracking-widest rounded-xl hover:scale-105 transition-transform flex items-center gap-2 shadow-[0_0_30px_rgba(236,72,153,0.3)] w-full sm:w-auto justify-center"
           >
             WhatsApp Collaboration <ArrowRight size={14} />
           </a>
           <a
-            href="https://www.instagram.com/amanifx__/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-8 py-5 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-mono font-black text-xs uppercase tracking-widest rounded-xl hover:scale-105 transition-transform flex items-center gap-2 shadow-[0_0_30px_rgba(168,85,247,0.25)] w-full sm:w-auto justify-center"
-          >
-            Instagram Feed <Instagram size={14} />
-          </a>
-          <a
             href="mailto:amanbam604@gmail.com"
-            className="px-8 py-5 bg-zinc-900 text-white border border-white/10 hover:border-white/20 font-mono font-black text-xs uppercase tracking-widest rounded-xl hover:scale-105 transition-transform w-full sm:w-auto justify-center"
+            className="px-10 py-5 bg-zinc-900 text-white border border-white/10 hover:border-white/20 font-mono font-black text-xs uppercase tracking-widest rounded-xl hover:scale-105 transition-transform w-full sm:w-auto justify-center"
           >
             Shoot Email
           </a>
@@ -735,7 +572,7 @@ export const VideoPortfolio = () => {
             >
               {activeVideo.videoUrl.includes('instagram.com') ? (
                 <iframe
-                  src={`https://www.instagram.com/reel/${activeVideo.videoUrl.match(/\/(reel|p|tv)\/([a-zA-Z0-9_-]+)/)?.[2] || ''}/embed/`}
+                  src={`https://www.instagram.com/reel/${activeVideo.videoUrl.match(/\/reel\/([a-zA-Z0-9_-]+)/)?.[1] || ''}/embed/`}
                   className="w-full h-full border-none rounded-3xl"
                   allowFullScreen
                   scrolling="no"
