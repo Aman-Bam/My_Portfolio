@@ -7,7 +7,6 @@ import Navbar from '../components/portfolio/Navbar';
 import Hero from '../components/portfolio/Hero';
 import About from '../components/portfolio/About';
 import Projects from '../components/portfolio/Projects';
-import VideoShowcase from '../components/portfolio/VideoShowcase';
 import Skills from '../components/portfolio/Skills';
 import Experience from '../components/portfolio/Experience';
 import Stats from '../components/portfolio/Stats';
@@ -21,7 +20,6 @@ const Content = () => (
     <Hero />
     <About />
     <Projects />
-    <VideoShowcase />
     <Skills />
     <Experience />
     <Stats />

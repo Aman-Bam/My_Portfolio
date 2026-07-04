@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, X, Instagram, Eye, Heart, Sparkles, Film, ArrowRight } from 'lucide-react';
+import { Play, X, Sparkles, ArrowRight } from 'lucide-react';
+import { InstagramLogoIcon as Instagram } from '@radix-ui/react-icons';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 

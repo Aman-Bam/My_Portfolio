@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ExternalLink, ArrowRight } from "lucide-react";
+import { ExternalLink, ArrowRight, Film } from "lucide-react";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Magnetic } from "./Magnetic";
 import { projects, type Project } from "../../data/projects";
@@ -452,14 +452,24 @@ const Projects = () => {
             {projects.map((p) => (
               <ProjectCard key={p.title} project={p} />
             ))}
-            <Magnetic className="project-card-wrap">
-              <button
-                className="view-all-btn"
-                onClick={() => navigate("/all-project")}
-              >
-                VIEW ALL WORKS <ArrowRight size={16} />
-              </button>
-            </Magnetic>
+            <div className="flex flex-col gap-4 justify-center project-card-wrap shrink-0">
+              <Magnetic>
+                <button
+                  className="view-all-btn w-full justify-center"
+                  onClick={() => navigate("/all-project")}
+                >
+                  VIEW ALL WORKS <ArrowRight size={16} />
+                </button>
+              </Magnetic>
+              <Magnetic>
+                <button
+                  className="view-all-btn w-full justify-center bg-pink-500/5 border-pink-500/20 text-pink-500 hover:bg-pink-500 hover:text-black hover:shadow-[0_0_30px_rgba(236,72,153,0.4)]"
+                  onClick={() => navigate("/video-portfolio")}
+                >
+                  VIDEO PORTFOLIO <Film size={16} />
+                </button>
+              </Magnetic>
+            </div>
           </div>
         </div>
       </section>

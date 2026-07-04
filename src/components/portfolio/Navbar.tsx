@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { Magnetic } from './Magnetic';
 import { InstagramLogoIcon as Instagram } from '@radix-ui/react-icons';
@@ -8,7 +9,7 @@ const sections = [
   { id: 'hero', label: 'HOME' },
   { id: 'about', label: 'ABOUT' },
   { id: 'projects', label: 'WORK' },
-  { id: 'video-showcase', label: 'REELS' },
+  { id: 'video-portfolio', label: 'REELS' },
   { id: 'skills', label: 'SKILLS' },
   { id: 'experience', label: 'JOURNEY' },
   { id: 'contact', label: 'CONTACT' },
@@ -17,6 +18,7 @@ const sections = [
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredDot, setHoveredDot] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const { scrollY } = useScroll();
   const bgOpacity = useTransform(scrollY, [0, 80], [0, 0.8]);
@@ -25,9 +27,23 @@ const Navbar = () => {
 
   const scrollTo = useCallback((id: string) => {
     setMenuOpen(false);
+    if (id === 'video-portfolio') {
+      navigate('/video-portfolio');
+      return;
+    }
+    
+    if (window.location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return;
+    }
+
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
-  }, []);
+  }, [navigate]);
 
   return (
     <>

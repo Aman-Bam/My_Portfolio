@@ -12,7 +12,8 @@ import {
   Terminal,
   Zap,
   Blocks,
-  Network
+  Network,
+  Film
 } from 'lucide-react';
 
 type Proficiency = 'Expert' | 'Advanced' | 'Proficient' | 'Learning';
@@ -97,6 +98,29 @@ const SKILL_GROUPS: SkillGroup[] = [
         statement: 'Integrating Gemini/GPT with tool-calling and RAG for intelligent autonomous agents.'
       },
       { name: 'Vector DBs', proficiency: 'Proficient' },
+    ]
+  },
+  {
+    label: 'Video & Motion Design',
+    color: 'pink',
+    accent: '#ec4899',
+    icon: <Film className="w-4 h-4" />,
+    skills: [
+      { 
+        name: 'Premiere Pro', 
+        proficiency: 'Expert', 
+        statement: 'Mastery of short-form retention editing, dynamic timeline pacing, multi-cam synchronization, and sound FX layering.',
+        projectLink: '/video-portfolio'
+      },
+      { 
+        name: 'After Effects', 
+        proficiency: 'Expert', 
+        statement: 'Advanced motion tracking, custom 3D VFX rendering, rotoscoping, kinetic typography, and glowing visual assets.',
+        projectLink: '/video-portfolio'
+      },
+      { name: 'DaVinci Resolve', proficiency: 'Advanced' },
+      { name: 'Color Grading', proficiency: 'Advanced' },
+      { name: 'Sound Design & FX', proficiency: 'Advanced' },
     ]
   }
 ];
@@ -366,17 +390,31 @@ const Skills = () => {
           </div>
         </div>
         
-        <button 
-          onClick={() => navigate('/capability-deck')}
-          className="group relative flex items-center gap-4 bg-white text-black px-10 py-5 rounded-xl font-display font-black text-sm hover:bg-zinc-200 transition-all duration-500"
-        >
-          <Zap className="w-4 h-4 fill-current" />
-          ACCESS CAPABILITY DECK
-          <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-500" />
-          
-          {/* Subtle Glow */}
-          <div className="absolute inset-0 rounded-xl bg-white/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-        </button>
+        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+          <button 
+            onClick={() => navigate('/capability-deck')}
+            className="group relative flex items-center justify-center gap-4 bg-white text-black px-10 py-5 rounded-xl font-display font-black text-sm hover:bg-zinc-200 transition-all duration-500 w-full sm:w-auto"
+          >
+            <Zap className="w-4 h-4 fill-current" />
+            ACCESS CAPABILITY DECK
+            <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-500" />
+            
+            {/* Subtle Glow */}
+            <div className="absolute inset-0 rounded-xl bg-white/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+          </button>
+
+          <button 
+            onClick={() => navigate('/video-portfolio')}
+            className="group relative flex items-center justify-center gap-4 bg-transparent border border-white/10 hover:border-pink-500/30 text-white px-10 py-5 rounded-xl font-display font-black text-sm hover:bg-pink-500/5 transition-all duration-500 w-full sm:w-auto"
+          >
+            <Film className="w-4 h-4 text-pink-500" />
+            VIEW VIDEO PORTFOLIO
+            <ChevronRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-500 text-pink-500" />
+            
+            {/* Subtle Glow */}
+            <div className="absolute inset-0 rounded-xl bg-pink-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+          </button>
+        </div>
       </div>
     </section>
   );

@@ -7,10 +7,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 const terminalRows = [
   ['LOCATION', 'Uttarakhand, India Available for (Global Work)'],
-  ['STATUS', 'Open to Work (Frontend /Backend / Full Stack / AI Tools)'],
+  ['STATUS', 'Open to Work (Frontend / Backend / Full Stack / AI Tools)'],
   ['EDUCATION', 'BCA, Kumaun University (2024–2027)'],
   ['GRAD', 'May 2027'],
-  ['STACK', 'MERN • Next.js • TypeScript • Tailwind • AI Integrations'],
+  ['DEV STACK', 'MERN • Next.js • TypeScript • Tailwind • AI Tools'],
+  ['EDIT STACK', 'Premiere Pro • After Effects • DaVinci Resolve'],
   ['OS', 'Windows/Linux'],
   ['BUILDING', 'KarrigerConnect – SaaS for developer networking & referrals'],
   ['INTERESTS', 'AI Agents • Automation • Open Source • SaaS Systems'],

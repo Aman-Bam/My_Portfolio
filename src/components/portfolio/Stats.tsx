@@ -7,9 +7,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
   { value: 1, display: '01', label: 'HACKATHONS WON' },
-  { value: null, display: '3rd', label: 'RANK ACHIEVED' },
-  { value: 9, display: '9+', label: 'REAL PRODUCTS SHIPPED' },
-  // { value: null, display: '∞', label: 'CURIOSITY' },
+  { value: 20, display: '20M+', label: 'INSTAGRAM VIEWS' },
+  { value: 15, display: '15+', label: 'PRODUCTS SHIPPED' },
+  { value: null, display: 'Viral', label: 'MOTION RETENTION' },
 ];
 const CountUp = ({ target, display, label }: { target: number | null; display: string; label: string }) => {
   const [val, setVal] = useState(target !== null ? '0' : '');
