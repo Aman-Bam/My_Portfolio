@@ -3,6 +3,7 @@ import { useEffect, useRef, useCallback } from 'react';
 const CustomCursor = () => {
   const crosshairRef = useRef<HTMLDivElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
   const pos = useRef({ x: 0, y: 0 });
   const innerPos = useRef({ x: 0, y: 0 });
   const outerPos = useRef({ x: 0, y: 0 });
@@ -35,9 +36,15 @@ const CustomCursor = () => {
       const state = hoverState.current;
       if (outerRef.current) {
         const isLink = state === 'link';
-        outerRef.current.style.transform = `translate(${outerPos.current.x}px, ${outerPos.current.y}px) translate(-50%, -50%) scale(${isLink ? 1.5 : 1})`;
-        outerRef.current.style.backgroundColor = isLink ? 'rgba(0,232,122,0.08)' : 'transparent';
-        outerRef.current.style.borderColor = isLink ? 'rgba(0,255,150,0.4)' : 'rgba(0,255,150,0.1)';
+        const isProject = state === 'project';
+        
+        outerRef.current.style.transform = `translate(${outerPos.current.x}px, ${outerPos.current.y}px) translate(-50%, -50%) scale(${isProject ? 2.2 : isLink ? 1.5 : 1})`;
+        outerRef.current.style.backgroundColor = isProject ? 'rgba(0,232,122,0.15)' : isLink ? 'rgba(0,232,122,0.08)' : 'transparent';
+        outerRef.current.style.borderColor = isProject ? 'rgba(0,255,150,0.6)' : isLink ? 'rgba(0,255,150,0.4)' : 'rgba(0,255,150,0.1)';
+        
+        if (textRef.current) {
+          textRef.current.style.opacity = isProject ? '1' : '0';
+        }
       }
 
       frameRef.current = requestAnimationFrame(animate);
@@ -67,9 +74,11 @@ const CustomCursor = () => {
       </div>
       <div
         ref={outerRef}
-        className="fixed top-0 left-0 z-[9998] pointer-events-none border border-mint/40 transition-[width,height] duration-200"
+        className="fixed top-0 left-0 z-[9998] pointer-events-none border border-mint/40 transition-[width,height,background-color,border-color] duration-200 flex items-center justify-center text-mint font-mono text-[7px] font-bold tracking-widest uppercase overflow-hidden"
         style={{ width: 32, height: 32, willChange: 'transform' }}
-      />
+      >
+        <span className="opacity-0 transition-opacity duration-200" ref={textRef}>VIEW</span>
+      </div>
     </>
   );
 };

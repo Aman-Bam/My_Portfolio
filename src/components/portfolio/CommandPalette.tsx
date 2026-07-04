@@ -35,7 +35,7 @@ export const CommandPalette = () => {
           <Command>
             <div className="flex items-center px-4 py-3 border-b border-white/5 gap-3">
               <Search size={16} className="text-slate-500" />
-              <input
+              <Command.Input
                 autoFocus
                 placeholder="Quick search... (Ctrl+K)"
                 className="bg-transparent border-none outline-none text-white w-full font-medium placeholder:text-slate-600"

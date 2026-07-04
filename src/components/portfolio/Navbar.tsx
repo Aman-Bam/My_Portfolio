@@ -8,6 +8,7 @@ const sections = [
   { id: 'hero', label: 'HOME' },
   { id: 'about', label: 'ABOUT' },
   { id: 'projects', label: 'WORK' },
+  { id: 'video-showcase', label: 'REELS' },
   { id: 'skills', label: 'SKILLS' },
   { id: 'experience', label: 'JOURNEY' },
   { id: 'contact', label: 'CONTACT' },
@@ -44,17 +45,31 @@ const Navbar = () => {
           </button>
         </Magnetic>
 
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-2">
           {sections.map((s) => (
             <button
               key={s.id}
               onClick={() => scrollTo(s.id)}
               onMouseEnter={() => setHoveredDot(s.id)}
               onMouseLeave={() => setHoveredDot(null)}
-              className="relative flex items-center gap-2 group"
+              className="relative flex items-center justify-center p-2 group"
               data-cursor="link"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-text-secondary group-hover:bg-mint transition-colors" />
+              
+              <AnimatePresence>
+                {hoveredDot === s.id && (
+                  <motion.span
+                    initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.8 }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
+                    className="absolute bottom-full mb-2 px-2.5 py-1 bg-[#0e0e0e]/95 backdrop-blur-md border border-white/10 text-white font-mono text-[9px] tracking-widest uppercase rounded pointer-events-none whitespace-nowrap z-50 shadow-xl"
+                  >
+                    {s.label}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </button>
           ))}
         </div>

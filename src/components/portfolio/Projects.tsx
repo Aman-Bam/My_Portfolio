@@ -31,12 +31,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 const ProjectCard = ({ project }: { project: Project }) => {
   const accent = project.color ?? "#00e87a";
+  const navigate = useNavigate();
 
   return (
     <Magnetic className="project-card-wrap">
       <div
         className="project-card"
         style={{ "--accent": accent } as React.CSSProperties}
+        onClick={() => navigate(`/project/${project.id}`)}
+        data-cursor="project"
       >
         {/* Gradient blob */}
         <div
@@ -64,6 +67,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="GitHub"
+                onClick={(e) => e.stopPropagation()}
               >
                 <GitHubLogoIcon width={16} height={16} />
               </a>
@@ -74,6 +78,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Live Demo"
+                onClick={(e) => e.stopPropagation()}
               >
                 <ExternalLink size={16} />
               </a>
@@ -222,7 +227,7 @@ const Projects = () => {
           flex-direction: column;
           overflow: hidden;
           transition: border-color 0.35s, transform 0.35s;
-          cursor: default;
+          cursor: pointer;
           transform: translateZ(0); /* Force GPU layer */
         }
         .project-card:hover {
