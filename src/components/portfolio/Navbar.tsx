@@ -93,7 +93,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-6">
           <div className="flex items-center gap-4">
             <a 
-              href="https://www.instagram.com/amanbam__" 
+              href="https://www.instagram.com/amanifx__/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-text-secondary hover:text-mint transition-colors flex items-center"

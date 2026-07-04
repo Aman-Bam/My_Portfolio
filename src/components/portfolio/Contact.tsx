@@ -126,7 +126,7 @@ const Contact = () => {
               },
               { icon: Github, label: "github.com/Aman-Bam", href: "https://github.com/Aman-Bam" },
               { icon: Linkedin, label: "linkedin.com/in/aman-bam", href: "https://www.linkedin.com/in/aman-bam/" },
-              { icon: Instagram, label: "instagram.com/amanbam__", href: "https://www.instagram.com/amanbam__" },
+              { icon: Instagram, label: "instagram.com/amanifx__", href: "https://www.instagram.com/amanifx__/" },
             ].map(({ icon: Icon, label, href }) => (
               <a
                 key={label}

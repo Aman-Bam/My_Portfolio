@@ -45,7 +45,7 @@ const Footer = () => {
           {[
             { Icon: Github, url: 'https://github.com/Aman-Bam', label: 'GitHub' },
             { Icon: Linkedin, url: 'https://www.linkedin.com/in/aman-bam/', label: 'LinkedIn' },
-            { Icon: Instagram, url: 'https://www.instagram.com/amanbam__', label: 'Instagram' },
+            { Icon: Instagram, url: 'https://www.instagram.com/amanifx__/', label: 'Instagram' },
             { Icon: Mail, url: 'mailto:amanbam604@gmail.com', label: 'Email' }
           ].map(({ Icon, url, label }, i) => (
             <Magnetic key={i}>
