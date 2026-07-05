@@ -7,7 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
   { value: 1, display: '01', label: 'HACKATHONS WON' },
-  { value: 20, display: '20M+', label: 'INSTAGRAM VIEWS' },
+  { value: 22, display: '22M+', label: 'INSTAGRAM VIEWS' },
   { value: 15, display: '15+', label: 'PRODUCTS SHIPPED' },
   { value: null, display: 'Viral', label: 'MOTION RETENTION' },
 ];
@@ -32,7 +32,7 @@ const CountUp = ({ target, display, label }: { target: number | null; display: s
             duration: 2,
             ease: 'power2.out',
             onUpdate: () => {
-              const suffix = display.includes('+') ? '+' : '';
+              const suffix = display.replace(/^[0-9]+/, '');
               const prefix = display.startsWith('0') && target < 10 ? '0' : '';
               setVal(prefix + Math.round(obj.v) + suffix);
             },
